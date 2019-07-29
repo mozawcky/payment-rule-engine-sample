@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Alcohol Rule",
+    "description": "Alcohol Rule",
+    "priority": 1,
+    "compositeRuleType": "ActivationRuleGroup",
+    "composingRules": [
+      {
+        "name": "Beer rule",
+        "description": "when age is greater than or equal 18, then print Allowed",
+        "priority": 2,
+        "condition": "#{#person.age >= 18 and #person.age < 21}",
+        "actions": [
+          "#{#log.info(\"Allowed to buy beer\")}"
+        ]
+      },
+      {
+        "name": "Hard liquor rule",
+        "description": "when age is greater than or equal 21 and is MALE, then print Allowed",
+        "priority": 1,
+        "actions": [
+          "#{#log.info(\"Allowed to buy hard liquor\")}"
+        ],
+        "compositeRuleType": "ConditionalRuleGroup",
+        "composingRules": [
+          {
+            "name": "is Member",
+            "description": "is member, then print Have Discount",
+            "priority": 1,
+            "condition": "#{#person.age >= 21}",
+            "actions": [
+              "#{#log.info(\"Can buy hard-liquor with discount\")}"
+            ]
+          },
+          {
+            "name": "is Member",
+            "description": "is member, then print Have Discount",
+            "priority": 2,
+            "condition": "#{#person.member == true}",
+            "actions": [
+              "#{#log.info(\"Can buy hard-liquor with discount\")}"
+            ]
+          },
+          {
+            "name": "is Member",
+            "description": "not member, then print No Discount",
+            "priority": 3,
+            "condition": "#{#person.member == false}",
+            "actions": [
+              "#{#log.info(\"Can buy hard-liquor without discount\")}"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "CREDIT_CARD_IDR",
+    "description": "Rule set for Bank Transfer payment for BNI",
+    "priority": 1,
+    "compositeRuleType": "UnitRuleGroup",
+    "composingRules": [
+      {
+        "name": "Currency",
+        "description": "This credit card rule is applicable for IDR transaction",
+        "priority": 1,
+        "condition": "facts.currency == 'IDR'",
+        "actions": [
+          "log.info(\"Transaction is using IDR\")}"
+        ]
+      },
+      {
+        "name": "Min Amount",
+        "description": "Credit card is only available if amount is greater than or equal to minimum amount",
+        "priority": 1,
+        "condition": "facts.amount >= 10",
+        "actions": [
+          "log.info(\"amount is greater or equal to minimum amount\")"
+        ]
+      },
+      {
+        "name": "Max Amount",
+        "description": "Credit card is only available if amount is less than or equal to minimum amount",
+        "priority": 1,
+        "condition": "facts.amount <= 1000000000000",
+        "actions": [
+          "log.info(\"amount is greater or equal to maximum amount\")"
+        ]
+      },
+      {
+        "name": "Allowed Products",
+        "description": "Payment method is allowed for certain products",
+        "priority": 1,
+        "condition": "['FLIGHT', 'HOTEL'].contains(facts.name)",
+        "actions": [
+          "log.info(facts.product)"
+        ]
+      }
+    ]
+  }
+]

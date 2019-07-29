@@ -1,0 +1,20 @@
+[
+  {
+    "name": "is allowed to by beer rule",
+    "description": "when age is greater than or equal 18, then print Allowed",
+    "priority": 2,
+    "condition": "#{#person.age >= 18}",
+    "actions": [
+      "#{#log.info(\"Allowed to buy beer\")}"
+    ]
+  },
+  {
+    "name": "Male alcohol rule",
+    "description": "when age is greater than or equal 21 and is MALE, then print Allowed",
+    "priority": 1,
+    "condition": "#{#person.age >= 21 and #person.gender.name().equals(\"MALE\")}",
+    "actions": [
+      "#{#log.info(\"Allowed to buy alcohol\")}"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "name": "BANK_TRANSFER_BNI",
+    "description": "Rule set for Bank Transfer payment for BNI",
+    "priority": 1,
+    "compositeRuleType": "ConditionalRuleGroup",
+    "composingRules": [
+      {
+        "name": "Provider Condition",
+        "description": "Provider must be BNI",
+        "priority": 1,
+        "condition": "#{#facts.providerName.equals(\"BNI\")}",
+        "actions": [
+          "#{#log.info(\"Is for BNI Bank Transfer\")}"
+        ]
+      },
+      {
+        "name": "Time Availability Condition",
+        "description": "Check if transaction time is between 7:00 - 23:00",
+        "priority": 2,
+        "condition": "#{#now.getHour() > 7 and #now.getHour() < 23}",
+        "actions": [
+          "#{#log.info(\"Within availability time\")}"
+        ]
+      }
+    ]
+  }
+]
