@@ -15,6 +15,7 @@ import org.jeasy.rules.api.RulesEngine;
 import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.spel.SpELRuleFactory;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
@@ -93,7 +94,6 @@ public class EasyRuleEngineTest {
     Rule rule = factory.createRule(new FileReader(file));
 
     Facts facts = new Facts();
-    Set<Rule> results = new TreeSet<>();
     Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
     facts.put("facts", product);
     facts.put("log", log);
@@ -115,12 +115,30 @@ public class EasyRuleEngineTest {
     Rule rule = groovyRuleFactory.createRule(new FileReader(file));
 
     Facts facts = new Facts();
-    Set<Rule> results = new TreeSet<>();
     Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
     facts.put("facts", product);
     facts.put("log", log);
 
     boolean ruleEvaluationResult = rule.evaluate(facts);
     log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
+  }
+
+  @Test
+  public void testCompositeRulePaymentOption_CC_Multiple_Matched_groovy() throws Exception {
+    String pathname = "src/test/resources/credit-card-rules-multiple-matched-groovy.json";
+    File file = new File(pathname);
+    GroovyRuleFactory groovyRuleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
+    Rules rules = groovyRuleFactory.createRules(new FileReader(file));
+
+    Facts facts = new Facts();
+    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
+    facts.put("facts", product);
+    facts.put("log", log);
+
+    for (Rule rule : rules) {
+      boolean ruleEvaluationResult = rule.evaluate(facts);
+      log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
+      Assert.assertTrue(ruleEvaluationResult);
+    }
   }
 }

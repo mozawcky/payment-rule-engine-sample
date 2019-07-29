@@ -24,7 +24,8 @@ public class GroovyCondition implements Condition {
     Binding binding = new Binding();
     GroovyShell shell = new GroovyShell(binding);
     facts.forEach((i)-> binding.setVariable(i.getKey(), i.getValue()));
-    LOGGER.info("Executing expression {}", this.expression);
-    return (Boolean) shell.evaluate(this.expression);
+    Boolean result = (Boolean) shell.evaluate(this.expression);
+    LOGGER.info("Executing expression {}, result {}", this.expression, result);
+    return result;
   }
 }
