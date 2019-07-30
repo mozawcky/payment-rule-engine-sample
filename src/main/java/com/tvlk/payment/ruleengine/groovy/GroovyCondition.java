@@ -9,8 +9,6 @@ import org.jeasy.rules.api.Facts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-
 @Data
 @AllArgsConstructor
 public class GroovyCondition implements Condition {
@@ -23,7 +21,7 @@ public class GroovyCondition implements Condition {
   public boolean evaluate(Facts facts) {
     Binding binding = new Binding();
     GroovyShell shell = new GroovyShell(binding);
-    facts.forEach((i)-> binding.setVariable(i.getKey(), i.getValue()));
+    facts.forEach((i) -> binding.setVariable(i.getKey(), i.getValue()));
     Boolean result = (Boolean) shell.evaluate(this.expression);
     LOGGER.info("Executing expression {}, result {}", this.expression, result);
     return result;

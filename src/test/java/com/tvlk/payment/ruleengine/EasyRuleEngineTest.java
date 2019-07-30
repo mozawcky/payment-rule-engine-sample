@@ -1,12 +1,17 @@
 package com.tvlk.payment.ruleengine;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
 import com.tvlk.payment.ruleengine.model.MyFacts;
 import com.tvlk.payment.ruleengine.model.Person;
 import com.tvlk.payment.ruleengine.model.Person.GENDER;
 import com.tvlk.payment.ruleengine.model.Product;
+import java.io.File;
+import java.io.FileReader;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.TreeSet;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
@@ -17,13 +22,6 @@ import org.jeasy.rules.spel.SpELRuleFactory;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.FileReader;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Slf4j
 public class EasyRuleEngineTest {
@@ -77,7 +75,7 @@ public class EasyRuleEngineTest {
     facts.put("results", results);
 
     RulesEngine rulesEngine = new DefaultRulesEngine();
-    //rulesEngine.fire(rules, facts);
+    // rulesEngine.fire(rules, facts);
     System.out.println();
     boolean ruleEvaluationResult = rule.evaluate(facts);
     log.info("ruleEvaluationResult ", ruleEvaluationResult);
@@ -99,12 +97,11 @@ public class EasyRuleEngineTest {
     facts.put("log", log);
 
     RulesEngine rulesEngine = new DefaultRulesEngine();
-    //rulesEngine.fire(rules, facts);
+    // rulesEngine.fire(rules, facts);
     System.out.println();
     boolean ruleEvaluationResult = rule.evaluate(facts);
     log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
   }
-
 
   @Test
   public void testCompositeRulePaymentOption_CC_groovy() throws Exception {

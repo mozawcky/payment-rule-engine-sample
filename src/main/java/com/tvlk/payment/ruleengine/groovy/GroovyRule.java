@@ -1,5 +1,7 @@
 package com.tvlk.payment.ruleengine.groovy;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Data;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Condition;
@@ -7,18 +9,13 @@ import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.core.BasicRule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 public class GroovyRule extends BasicRule {
 
   private Condition condition = Condition.FALSE;
   private List<Action> actions = new ArrayList<>();
 
-  /**
-   * Create a new SpEL rule.
-   */
+  /** Create a new SpEL rule. */
   public GroovyRule() {
     super(Rule.DEFAULT_NAME, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
   }
@@ -58,6 +55,7 @@ public class GroovyRule extends BasicRule {
 
   /**
    * Specify the rule's condition as SpEL expression.
+   *
    * @param condition of the rule
    * @return this rule
    */
@@ -68,6 +66,7 @@ public class GroovyRule extends BasicRule {
 
   /**
    * Add an action specified as an SpEL expression to the rule.
+   *
    * @param action to add to the rule
    * @return this rule
    */

@@ -21,7 +21,7 @@ public class GroovyAction implements Action {
   public void execute(Facts facts) {
     Binding binding = new Binding();
     GroovyShell shell = new GroovyShell(binding);
-    facts.forEach((i)-> binding.setVariable(i.getKey(), i.getValue()));
+    facts.forEach((i) -> binding.setVariable(i.getKey(), i.getValue()));
     shell.evaluate(this.expression);
   }
 }

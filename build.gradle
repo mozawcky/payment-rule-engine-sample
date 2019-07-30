@@ -1,5 +1,6 @@
 buildscript {
 	repositories {
+		jcenter()
 		mavenCentral()
 	}
 	ext {
@@ -13,9 +14,17 @@ buildscript {
 plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
+	id "com.github.sherter.google-java-format" version "0.8"
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.github.sherter.google-java-format'
+
+googleJavaFormat {
+	toolVersion '1.5'
+	include '**/*.java'
+	exclude '**/generated-sources/*'
+}
 
 group = 'com.tvlk.payment'
 version = '0.0.1-SNAPSHOT'
@@ -52,4 +61,10 @@ dependencies {
 	// Scripting Engine
 	compile group: 'org.codehaus.groovy', name: 'groovy', version: "2.5.7"
 	compile group: 'org.codehaus.groovy', name: 'groovy-json', version: "2.5.7"
+}
+
+compileJava {
+	dependsOn 'googleJavaFormat'
+	options.encoding = 'UTF-8'
+	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
