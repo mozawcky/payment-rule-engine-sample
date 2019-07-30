@@ -94,7 +94,7 @@ public class EasyRuleEngineTest {
     Rule rule = factory.createRule(new FileReader(file));
 
     Facts facts = new Facts();
-    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
+    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "BNI");
     facts.put("facts", product);
     facts.put("log", log);
 
@@ -115,7 +115,7 @@ public class EasyRuleEngineTest {
     Rule rule = groovyRuleFactory.createRule(new FileReader(file));
 
     Facts facts = new Facts();
-    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
+    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "BNI");
     facts.put("facts", product);
     facts.put("log", log);
 
@@ -131,7 +131,7 @@ public class EasyRuleEngineTest {
     Rules rules = groovyRuleFactory.createRules(new FileReader(file));
 
     Facts facts = new Facts();
-    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR");
+    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "BNI");
     facts.put("facts", product);
     facts.put("log", log);
 
@@ -139,6 +139,24 @@ public class EasyRuleEngineTest {
       boolean ruleEvaluationResult = rule.evaluate(facts);
       log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
       Assert.assertTrue(ruleEvaluationResult);
+    }
+  }
+
+  @Test
+  public void testCompositeRulePaymentOption_CC_activation_groovy() throws Exception {
+    String pathname = "src/test/resources/credit-card-rules-single-matched-groovy.json";
+    File file = new File(pathname);
+    GroovyRuleFactory groovyRuleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
+    Rules rules = groovyRuleFactory.createRules(new FileReader(file));
+    Rule rule = groovyRuleFactory.createRule(new FileReader(file));
+
+    Facts facts = new Facts();
+    Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "MANDIRI");
+    facts.put("facts", product);
+    facts.put("log", log);
+    for (Rule r : rules) {
+      boolean ruleEvaluationResult = r.evaluate(facts);
+      log.info("Rule [{}] matched?, {}", r, ruleEvaluationResult);
     }
   }
 }

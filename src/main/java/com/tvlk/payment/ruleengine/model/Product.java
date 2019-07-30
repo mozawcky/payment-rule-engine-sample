@@ -11,4 +11,5 @@ public class Product {
   private String name;
   private BigDecimal amount;
   private String currency;
+  private String providerName;
 }
