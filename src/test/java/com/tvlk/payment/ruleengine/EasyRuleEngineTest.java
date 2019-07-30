@@ -12,6 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TreeSet;
+
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
@@ -24,10 +27,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 @Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EasyRuleEngineTest {
 
-  private SpELRuleFactory factory = new SpELRuleFactory(new JsonRuleDefinitionReader());
-  private ObjectMapper objectMapper = new ObjectMapper();
+  SpELRuleFactory factory = new SpELRuleFactory(new JsonRuleDefinitionReader());
+  ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   public void test() throws Exception {
@@ -145,15 +149,14 @@ public class EasyRuleEngineTest {
     File file = new File(pathname);
     GroovyRuleFactory groovyRuleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
     Rules rules = groovyRuleFactory.createRules(new FileReader(file));
-    Rule rule = groovyRuleFactory.createRule(new FileReader(file));
 
     Facts facts = new Facts();
     Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "MANDIRI");
     facts.put("facts", product);
     facts.put("log", log);
-    for (Rule r : rules) {
-      boolean ruleEvaluationResult = r.evaluate(facts);
-      log.info("Rule [{}] matched?, {}", r, ruleEvaluationResult);
+    for (Rule rule : rules) {
+      boolean ruleEvaluationResult = rule.evaluate(facts);
+      log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
     }
   }
 }
