@@ -3,12 +3,21 @@
     "name": "FLIGHT-FL01_Domestic",
     "description": "Rule set for Domestic Flight",
     "priority": 1,
-    "compositeRuleType": "UnitRuleGroup",
+    "compositeRuleType": "ConditionalRuleGroup",
     "composingRules": [
+      {
+        "name": "AVAILABILITY",
+        "description": "Check if transaction time is within operating times",
+        "priority": 1,
+        "condition": "request.transactionTime.getHour() > 7 && request.transactionTime.getHour() < 23",
+        "actions": [
+          "log.info(\"Transaction time is within operating times\")"
+        ]
+      },
       {
         "name": "PRODUCT",
         "description": "FLIGHT",
-        "priority": 1,
+        "priority": 2,
         "condition": "request.productName == 'FLIGHT'",
         "actions": [
           "log.info(\"Provider is BNI\")}"
@@ -17,7 +26,7 @@
       {
         "name": "SUB_PRODUCT",
         "description": "Sub product is FL01 for domestic flight",
-        "priority": 1,
+        "priority": 3,
         "condition": "request.subProducts.find { el -> el in ['FL01', 'FL02'] } != null",
         "actions": [
           "log.info(\"Transaction is using IDR\")}"
@@ -26,16 +35,16 @@
       {
         "name": "MIN_AMOUNT",
         "description": "Min amount to be match",
-        "priority": 1,
+        "priority": 3,
         "condition": "request.amount >= 10",
         "actions": [
           "log.info(\"amount is greater or equal to minimum amount\")"
         ]
       },
       {
-        "name": "Max Amount",
+        "name": "MAX_AMOUNT",
         "description": "Max amount to be matched",
-        "priority": 1,
+        "priority": 4,
         "condition": "request.amount <= 1000000000000",
         "actions": [
           "log.info(\"amount is greater or equal to maximum amount\")"

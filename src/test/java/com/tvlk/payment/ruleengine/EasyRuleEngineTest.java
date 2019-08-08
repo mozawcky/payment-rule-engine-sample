@@ -170,7 +170,9 @@ public class EasyRuleEngineTest {
     Rules rules = groovyRuleFactory.createRules(new FileReader(file));
 
     Facts facts = new Facts();
-    Request request = new Request("FLIGHT", Lists.list("FL01","FL02"), new BigDecimal(100), "IDR");
+    Request request =
+        new Request(
+            "FLIGHT", Lists.list("FL01", "FL02"), new BigDecimal(100), "IDR", LocalDateTime.now());
     facts.put("request", request);
     facts.put("log", log);
     for (Rule rule : rules) {
