@@ -144,7 +144,7 @@ public class EasyRuleEngineTest {
   }
 
   @Test
-  public void testCompositeRulePaymentOption_CC_activation_groovy() throws Exception {
+  public void testCompositeRulePaymentOption_CC_Single_Matched_groovy() throws Exception {
     String pathname = "src/test/resources/credit-card-rules-single-matched-groovy.json";
     File file = new File(pathname);
     GroovyRuleFactory groovyRuleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
