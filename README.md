@@ -1,2 +1,2 @@
 # payment-rule-engine-sample
-POC
+This very lightweight service makes use of easy-rules but will implement it own rule processor to evaluate rules as well as return outputs if rule is matched. 
