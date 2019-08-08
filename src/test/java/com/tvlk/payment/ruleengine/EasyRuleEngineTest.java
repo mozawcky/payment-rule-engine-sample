@@ -13,9 +13,11 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.tvlk.payment.ruleengine.model.Request;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
@@ -153,6 +155,23 @@ public class EasyRuleEngineTest {
     Facts facts = new Facts();
     Product product = new Product("FLIGHT", new BigDecimal(100), "IDR", "MANDIRI");
     facts.put("facts", product);
+    facts.put("log", log);
+    for (Rule rule : rules) {
+      boolean ruleEvaluationResult = rule.evaluate(facts);
+      log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
+    }
+  }
+
+  @Test
+  public void testCompositeRulePaymentOption_Domestic_Flight_Matched_groovy() throws Exception {
+    String pathname = "src/test/resources/credit-card-rules-single-flight-product-groovy.json";
+    File file = new File(pathname);
+    GroovyRuleFactory groovyRuleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
+    Rules rules = groovyRuleFactory.createRules(new FileReader(file));
+
+    Facts facts = new Facts();
+    Request request = new Request("FLIGHT", Lists.list("FL01","FL02"), new BigDecimal(100), "IDR");
+    facts.put("request", request);
     facts.put("log", log);
     for (Rule rule : rules) {
       boolean ruleEvaluationResult = rule.evaluate(facts);
