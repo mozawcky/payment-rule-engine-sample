@@ -74,15 +74,11 @@ public class EasyRuleEngineTest {
     try (FileReader fileReader = new FileReader(file)) {
       Rule rule = factory.createRule(fileReader);
       Facts facts = new Facts();
-      Set<Rule> results = new TreeSet<>();
       MyFacts myFacts = new MyFacts("BNI");
       facts.put("facts", myFacts);
       facts.put("log", log);
       facts.put("now", LocalDateTime.now());
-      facts.put("results", results);
 
-      RulesEngine rulesEngine = new DefaultRulesEngine();
-      // rulesEngine.fire(rules, facts);
       log.info("Rule matched? {} :: {}", rule, rule.evaluate(facts));
 
     } finally {
