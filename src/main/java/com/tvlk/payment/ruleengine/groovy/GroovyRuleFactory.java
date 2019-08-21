@@ -43,8 +43,8 @@ public class GroovyRuleFactory {
   public Rules createRules(Reader rulesDescriptor) throws Exception {
     Rules rules = new Rules();
     List<RuleDefinition> ruleDefinition = reader.read(rulesDescriptor);
-    for (RuleDefinition spelRuleDefinition : ruleDefinition) {
-      rules.register(createRule(spelRuleDefinition));
+    for (RuleDefinition groovyRuleDefinition : ruleDefinition) {
+      rules.register(createRule(groovyRuleDefinition));
     }
     return rules;
   }
@@ -58,16 +58,16 @@ public class GroovyRuleFactory {
   }
 
   private static Rule createSimpleRule(RuleDefinition ruleDefinition) {
-    GroovyRule spELRule =
+    GroovyRule groovyRule =
         new GroovyRule()
             .name(ruleDefinition.getName())
             .description(ruleDefinition.getDescription())
             .priority(ruleDefinition.getPriority())
             .when(ruleDefinition.getCondition());
     for (String action : ruleDefinition.getActions()) {
-      spELRule.then(action);
+      groovyRule.then(action);
     }
-    return spELRule;
+    return groovyRule;
   }
 
   private static Rule createCompositeRule(RuleDefinition ruleDefinition) {

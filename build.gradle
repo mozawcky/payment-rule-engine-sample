@@ -8,6 +8,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+		classpath("io.freefair.gradle:lombok-plugin:4.0.0")
 	}
 }
 
@@ -15,6 +16,7 @@ plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
 	id "com.github.sherter.google-java-format" version "0.8"
+	id "io.freefair.lombok" version "4.0.0"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -47,11 +49,11 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// lombok
-	compileOnly("org.projectlombok:lombok:${lombokVersion}")
+	// lombok without gradle plugin - this may not work for ./gradlew wrapper
+	/*compileOnly("org.projectlombok:lombok:${lombokVersion}")
 	testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
 	annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-	testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+	testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")*/
 
 	// jeasy Rule Engine
 	compile 'org.jeasy:easy-rules-core:3.3.0'
@@ -67,4 +69,22 @@ compileJava {
 	dependsOn 'googleJavaFormat'
 	options.encoding = 'UTF-8'
 	options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+bootRun {
+	doFirst {
+		environment 'schema', "${buildSchema}"
+		environment 'jooqJdbcUrl', "${jooqJdbcUrl}"
+		environment 'jooqJdbcPassword', "${jooqJdbcPassword}"
+		environment 'jooqJdbcUser', "${jooqJdbcUser}"
+	}
+}
+
+test {
+	/*doFirst {
+		environment 'schema', "${buildSchema}"
+		environment 'jooqJdbcUrl', "${jooqJdbcUrl}"
+		environment 'jooqJdbcPassword', "${jooqJdbcPassword}"
+		environment 'jooqJdbcUser', "${jooqJdbcUser}"
+	}*/
 }
