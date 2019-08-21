@@ -1,18 +1,11 @@
 package com.tvlk.payment.ruleengine;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
 import com.tvlk.payment.ruleengine.model.MyFacts;
 import com.tvlk.payment.ruleengine.model.Person;
 import com.tvlk.payment.ruleengine.model.Person.GENDER;
 import com.tvlk.payment.ruleengine.model.Product;
 import com.tvlk.payment.ruleengine.model.Request;
-import java.io.File;
-import java.io.FileReader;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.TreeSet;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +20,16 @@ import org.jeasy.rules.support.JsonRuleDefinitionReader;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileReader;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EasyRuleEngineTest {
 
   SpELRuleFactory factory = new SpELRuleFactory(new JsonRuleDefinitionReader());
-  ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   public void test() throws Exception {
