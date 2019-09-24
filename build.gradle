@@ -63,6 +63,11 @@ dependencies {
 	// Scripting Engine
 	compile group: 'org.codehaus.groovy', name: 'groovy', version: "2.5.7"
 	compile group: 'org.codehaus.groovy', name: 'groovy-json', version: "2.5.7"
+
+	// Jackson
+	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.9'
+	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.9'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
 }
 
 compileJava {
