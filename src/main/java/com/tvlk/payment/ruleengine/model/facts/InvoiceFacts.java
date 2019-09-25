@@ -1,11 +1,12 @@
 package com.tvlk.payment.ruleengine.model.facts;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
 public class InvoiceFacts {
+  private String currency;
   private long amount;
   private long time;
   private String deviceInterface;
