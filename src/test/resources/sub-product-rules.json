@@ -1,0 +1,22 @@
+{
+  "id": "FLIGHT",
+  "paymentMethodRules": {
+    "BANK_TRANSFER":
+    [
+      {
+        "name": "MAX_INVOICE_AMOUNT",
+        "description": "Check if amount is less than max amount",
+        "field": "invoiceFacts.amount",
+        "operator": "LT",
+        "value": "10000000"
+      },
+      {
+        "name": "MIN_INVOICE_AMOUNT",
+        "description": "Check if amount is greater than min amount",
+        "field": "invoiceFacts.amount",
+        "operator": "GT",
+        "value": "300000"
+      }
+    ]
+  }
+}
