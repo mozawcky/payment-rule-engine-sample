@@ -1,26 +1,45 @@
 package com.tvlk.payment.ruleengine;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
+import com.tvlk.payment.ruleengine.model.rules.ProductRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
-import com.tvlk.payment.ruleengine.model.rules.Rules;
+import com.tvlk.payment.ruleengine.model.rules.PaymentMethodRules;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+
 
 public class RuleCompositionTest {
 
+  ObjectMapper objectMapper = new ObjectMapper();
+
   @Test
-  public void testRuleComposition() throws Exception {
-    Facts facts = getDefaultFacts();
-    System.out.println("facts : " + facts);
-    
+  public void testRuleCombination() throws Exception {
+    File paymentRulesFile = new File("src/test/resources/payment-rules.json");
+    PaymentMethodRules paymentPaymentMethodRules = objectMapper.readValue(paymentRulesFile, PaymentMethodRules.class);
+    File productRulesFile = new File("src/test/resources/product-rules.json");
+    ProductRules productRules = objectMapper.readValue(productRulesFile, ProductRules.class);
+
+    combine(paymentPaymentMethodRules, productRules.getPaymentMethodRules());
+
+    System.out.println("asu");
   }
 
-  private Rules getPaymentRules() {
-    return new Rules();
+  private void combine(PaymentMethodRules baseRule, PaymentMethodRules newRule) {
+    for (RuleDetails baseRuleDetails : baseRule.getRuleDetails()) {
+      for (RuleDetails newRuleDetails : newRule.getRuleDetails()) {
+        if (baseRuleDetails.getName().equals(newRuleDetails.getName())) {
+          baseRuleDetails.setValue(newRuleDetails.getValue());
+        }
+      }
+    }
+  }
+
+  private PaymentMethodRules getPaymentRules() {
+    return new PaymentMethodRules();
   }
 
   private Facts getDefaultFacts() {

@@ -4,13 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RuleDetails {
-  private String name;
-  private String description;
-  private String field;
-  private String operator;
-  private Object value;
+public class PaymentMethodRules {
+  private String id;
+  private List<RuleDetails> ruleDetails;
 }
