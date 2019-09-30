@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
+import com.tvlk.payment.ruleengine.model.rules.PaymentMethodRules;
 import com.tvlk.payment.ruleengine.model.rules.ProductRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
-import com.tvlk.payment.ruleengine.model.rules.PaymentMethodRules;
-import org.junit.Test;
-
 import java.io.File;
-
+import org.junit.Test;
 
 public class RuleCompositionTest {
 
@@ -19,7 +17,8 @@ public class RuleCompositionTest {
   @Test
   public void testRuleCombination() throws Exception {
     File paymentRulesFile = new File("src/test/resources/payment-rules.json");
-    PaymentMethodRules paymentPaymentMethodRules = objectMapper.readValue(paymentRulesFile, PaymentMethodRules.class);
+    PaymentMethodRules paymentPaymentMethodRules =
+        objectMapper.readValue(paymentRulesFile, PaymentMethodRules.class);
     File productRulesFile = new File("src/test/resources/product-rules.json");
     ProductRules productRules = objectMapper.readValue(productRulesFile, ProductRules.class);
 

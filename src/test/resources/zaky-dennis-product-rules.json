@@ -1,0 +1,22 @@
+{
+  "id": "FLIGHT",
+  "priority": 2,
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "invoiceFacts.productType",
+      "operator": "IN",
+      "value": [
+        "FLIGHT"
+      ]
+    },
+    {
+      "name": "MIN_INVOICE_AMOUNT",
+      "description": "Check if amount is greater than min amount",
+      "field": "invoiceFacts.amount",
+      "operator": "GT",
+      "value": "300000"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "id": "BANK_TRANSFER",
+  "priority": 0,
+  "ruleDetails": [
+    {
+      "name": "CURRENCY",
+      "description": "Check if currency is allowed",
+      "field": "invoiceFacts.currency",
+      "operator": "EQUAL",
+      "value": "IDR"
+    },
+    {
+      "name": "DEVICE_INTERFACE",
+      "description": "Check if device is allowed",
+      "field": "invoiceFacts.deviceInterface",
+      "operator": "IN",
+      "value": ["DESKTOP", "ANDROID", "IOS"]
+    },
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "invoiceFacts.productType",
+      "operator": "IN",
+      "value": ["FLIGHT", "HOTEL"]
+    }
+  ]
+}
