@@ -1,0 +1,52 @@
+{
+  "id": "FLIGHT_SUB",
+  "priority": 3,
+  "ruleDetails": [
+    {
+      "name": "CURRENCY",
+      "description": "Check if currency is allowed",
+      "field": "invoiceFacts.currency",
+      "operator": "EQUAL",
+      "value": "IDR"
+    },
+    {
+      "name": "DEVICE_INTERFACE",
+      "description": "Check if device is allowed",
+      "field": "invoiceFacts.deviceInterface",
+      "operator": "IN",
+      "value": ["DESKTOP", "ANDROID", "IOS"]
+    },
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "invoiceFacts.productType",
+      "operator": "IN",
+      "value": [
+        "FLIGHT"
+      ]
+    },
+    {
+      "name": "MAX_INVOICE_AMOUNT",
+      "description": "Check if amount is less than max amount",
+      "field": "invoiceFacts.amount",
+      "operator": "LT",
+      "value": "10000000"
+    },
+    {
+      "name": "MIN_INVOICE_AMOUNT",
+      "description": "Check if amount is greater than min amount",
+      "field": "invoiceFacts.amount",
+      "operator": "GT",
+      "value": "300000"
+    },
+    {
+      "name": "SUB_PRODUCT_TYPE",
+      "description": "Check if sub product type is allowed",
+      "field": "invoiceFacts.productType.productType",
+      "operator": "IN",
+      "value": [
+        "FL01"
+      ]
+    }
+  ]
+}
