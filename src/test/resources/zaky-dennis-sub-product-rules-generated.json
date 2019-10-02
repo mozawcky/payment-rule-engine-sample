@@ -3,6 +3,15 @@
   "priority": 3,
   "ruleDetails": [
     {
+      "name": "SUB_PRODUCT_TYPE",
+      "description": "Check if sub product type is allowed",
+      "field": "invoiceFacts.productType.productType",
+      "operator": "IN",
+      "value": [
+        "FL01"
+      ]
+    },
+    {
       "name": "CURRENCY",
       "description": "Check if currency is allowed",
       "field": "invoiceFacts.currency",
@@ -38,15 +47,6 @@
       "field": "invoiceFacts.amount",
       "operator": "GT",
       "value": "300000"
-    },
-    {
-      "name": "SUB_PRODUCT_TYPE",
-      "description": "Check if sub product type is allowed",
-      "field": "invoiceFacts.productType.productType",
-      "operator": "IN",
-      "value": [
-        "FL01"
-      ]
     }
   ]
 }
