@@ -68,6 +68,14 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-core:2.9.9'
 	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.9'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+
+	/* ----------------------------
+   * --    Common Libraries    --
+   * ----------------------------
+   */
+	compile 'commons-io:commons-io:2.5'
+	compile 'com.google.guava:guava:20.0'
+	compile 'org.antlr:stringtemplate:4.0.2'
 }
 
 compileJava {
