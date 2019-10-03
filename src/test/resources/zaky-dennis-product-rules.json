@@ -15,7 +15,7 @@
       "name": "MIN_INVOICE_AMOUNT",
       "description": "Check if amount is greater than min amount",
       "field": "invoiceFacts.amount",
-      "operator": "GT",
+      "operator": "GTE",
       "value": "300000"
     }
   ]
