@@ -5,10 +5,10 @@
     {
       "name": "SUB_PRODUCT_TYPE",
       "description": "Check if sub product type is allowed",
-      "field": "invoiceFacts.productType.productType",
+      "field": "productKey",
       "operator": "IN",
       "value": [
-        "FL01"
+        "\"FL01\""
       ]
     }
   ]

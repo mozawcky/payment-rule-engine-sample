@@ -5,23 +5,23 @@
     {
       "name": "CURRENCY",
       "description": "Check if currency is allowed",
-      "field": "invoiceFacts.currency",
+      "field": "currency",
       "operator": "EQUAL",
       "value": "IDR"
     },
     {
       "name": "DEVICE_INTERFACE",
       "description": "Check if device is allowed",
-      "field": "invoiceFacts.deviceInterface",
+      "field": "deviceInterface",
       "operator": "IN",
-      "value": ["DESKTOP", "ANDROID", "IOS"]
+      "value": ["\"DESKTOP\"", "\"ANDROID\"", "\"IOS\""]
     },
     {
       "name": "PRODUCT_TYPE",
       "description": "Check if product type is allowed",
-      "field": "invoiceFacts.productType",
+      "field": "facts.productType",
       "operator": "IN",
-      "value": ["FLIGHT", "HOTEL"]
+      "value": ["\"FLIGHT\"", "\"HOTEL\""]
     }
   ]
 }

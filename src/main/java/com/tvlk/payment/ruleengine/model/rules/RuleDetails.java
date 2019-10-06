@@ -1,6 +1,7 @@
 package com.tvlk.payment.ruleengine.model.rules;
 
 import com.tvlk.payment.ruleengine.groovy.GroovyRule;
+import groovy.util.Eval;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class RuleDetails {
         condition = field + ".equals(" + "'" + value + "')";
         break;
       case IN:
-        condition = value + ".contains(" + field + "')";
+        condition = value.toString() + ".contains(" + field + ")";
         break;
       case LTE:
         condition = field + "<=" + value;

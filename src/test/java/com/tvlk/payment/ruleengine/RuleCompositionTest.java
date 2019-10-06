@@ -8,6 +8,7 @@ import com.tvlk.payment.ruleengine.model.rules.PaymentMethodRules;
 import com.tvlk.payment.ruleengine.model.rules.ProductRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
 import java.io.File;
+
 import org.junit.Test;
 
 public class RuleCompositionTest {
@@ -17,14 +18,12 @@ public class RuleCompositionTest {
   @Test
   public void testRuleCombination() throws Exception {
     File paymentRulesFile = new File("src/test/resources/payment-rules.json");
-    PaymentMethodRules paymentPaymentMethodRules =
+    PaymentMethodRules paymentMethodRules =
         objectMapper.readValue(paymentRulesFile, PaymentMethodRules.class);
     File productRulesFile = new File("src/test/resources/product-rules.json");
     ProductRules productRules = objectMapper.readValue(productRulesFile, ProductRules.class);
 
-    combine(paymentPaymentMethodRules, productRules.getPaymentMethodRules());
-
-    System.out.println("asu");
+    combine(paymentMethodRules, productRules.getPaymentMethodRules());
   }
 
   private void combine(PaymentMethodRules baseRule, PaymentMethodRules newRule) {
