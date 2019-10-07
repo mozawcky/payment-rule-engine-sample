@@ -6,7 +6,7 @@ import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
-import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
+import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;
@@ -85,12 +85,12 @@ public class RuleGenerationTest {
 
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
     Set<String> toRuleNames = new HashSet<>();
-    for (RuleDetails ruleDetails : to.getRuleDetails()) {
-      toRuleNames.add(ruleDetails.getName());
+    for (RuleDetail ruleDetail : to.getRuleDetails()) {
+      toRuleNames.add(ruleDetail.getName());
     }
-    for (RuleDetails ruleDetails : from.getRuleDetails()) {
-      if (!toRuleNames.contains(ruleDetails.getName())) {
-        to.getRuleDetails().add(ruleDetails);
+    for (RuleDetail ruleDetail : from.getRuleDetails()) {
+      if (!toRuleNames.contains(ruleDetail.getName())) {
+        to.getRuleDetails().add(ruleDetail);
       }
     }
   }

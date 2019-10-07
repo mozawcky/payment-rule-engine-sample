@@ -6,7 +6,7 @@ import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
 import com.tvlk.payment.ruleengine.model.rules.PaymentMethodRules;
 import com.tvlk.payment.ruleengine.model.rules.ProductRules;
-import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
+import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import java.io.File;
 
 import org.junit.Test;
@@ -27,10 +27,10 @@ public class RuleCompositionTest {
   }
 
   private void combine(PaymentMethodRules baseRule, PaymentMethodRules newRule) {
-    for (RuleDetails baseRuleDetails : baseRule.getRuleDetails()) {
-      for (RuleDetails newRuleDetails : newRule.getRuleDetails()) {
-        if (baseRuleDetails.getName().equals(newRuleDetails.getName())) {
-          baseRuleDetails.setValue(newRuleDetails.getValue());
+    for (RuleDetail baseRuleDetail : baseRule.getRuleDetails()) {
+      for (RuleDetail newRuleDetail : newRule.getRuleDetails()) {
+        if (baseRuleDetail.getName().equals(newRuleDetail.getName())) {
+          baseRuleDetail.setValue(newRuleDetail.getValue());
         }
       }
     }

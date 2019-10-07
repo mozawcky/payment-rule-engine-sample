@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PaymentMethodRules {
   private String id;
-  private List<RuleDetails> ruleDetails;
+  private List<RuleDetail> ruleDetails;
 }

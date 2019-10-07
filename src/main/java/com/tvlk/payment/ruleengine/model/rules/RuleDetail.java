@@ -1,7 +1,6 @@
 package com.tvlk.payment.ruleengine.model.rules;
 
 import com.tvlk.payment.ruleengine.groovy.GroovyRule;
-import groovy.util.Eval;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RuleDetails {
+public class RuleDetail {
   private String name;
   private String description;
   private String field;
@@ -29,8 +28,14 @@ public class RuleDetails {
       case LTE:
         condition = field + "<=" + value;
         break;
+      case LT:
+        condition = field + "<" + value;
+        break;
       case GTE:
         condition = field + ">=" + value;
+        break;
+      case GT:
+        condition = field + ">" + value;
         break;
     }
 

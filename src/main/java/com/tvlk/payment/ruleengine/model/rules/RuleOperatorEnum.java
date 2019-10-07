@@ -4,5 +4,7 @@ public enum RuleOperatorEnum {
   EQUAL,
   IN,
   LTE,
-  GTE
+  LT,
+  GTE,
+  GT
 }

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
-import com.tvlk.payment.ruleengine.model.rules.RuleDetails;
+import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.support.ActivationRuleGroup;
@@ -54,9 +54,9 @@ public class GroovyRuleFactory {
 
   public Rules createRules(PaymentConfigRules paymentConfigRules) throws Exception {
     Rules rules = new Rules();
-    List<RuleDetails> ruleDetails = paymentConfigRules.getRuleDetails();
-    for (RuleDetails ruleDetail : ruleDetails) {
-      rules.register(ruleDetail.toGroovy());
+    List<RuleDetail> ruleDetails = paymentConfigRules.getRuleDetails();
+    for (RuleDetail ruleDetail : ruleDetails) {
+      rules.register(createCompositeRule(paymentConfigRules));
     }
     return rules;
   }
@@ -104,6 +104,16 @@ public class GroovyRuleFactory {
 
     for (RuleDefinition composingRuleDefinition : ruleDefinition.getComposingRules()) {
       compositeRule.addRule(createRule(composingRuleDefinition));
+    }
+
+    return compositeRule;
+  }
+
+  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
+    CompositeRule compositeRule = new UnitRuleGroup(paymentConfigRules.getId());
+
+    for (RuleDetail ruleDetail : paymentConfigRules.getRuleDetails()) {
+      compositeRule.addRule(ruleDetail.toGroovy());
     }
 
     return compositeRule;

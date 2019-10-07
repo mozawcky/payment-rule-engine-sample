@@ -13,5 +13,5 @@ import java.util.List;
 public class PaymentConfigRules {
   String id;
   int priority;
-  List<RuleDetails> ruleDetails;
+  List<RuleDetail> ruleDetails;
 }
