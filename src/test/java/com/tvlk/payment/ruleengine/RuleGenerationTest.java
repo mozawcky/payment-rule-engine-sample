@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -97,31 +98,32 @@ public class RuleGenerationTest {
 
   private Facts getDefaultFacts() {
     Facts facts = new Facts();
-
-    facts.put("currency", "IDR");
-    facts.put("amount", 456456);
-    facts.put("time", System.currentTimeMillis());
-    facts.put("deviceInterface", "DESKTOP");
-    facts.put("productType", "FLIGHT");
-    facts.put("productKey", "FL01");
-
-    //facts.setInvoiceFacts(getDefaultInvoiceFacts());
-
+    populateFacts(facts, getDefaultInvoiceFacts());
     return facts;
   }
 
   private InvoiceFacts getDefaultInvoiceFacts() {
     InvoiceFacts invoiceFacts = new InvoiceFacts();
-
-
-    //invoiceFacts.setCurrency("IDR");
-    //invoiceFacts.setAmount(456456);
-    //invoiceFacts.setTime(System.currentTimeMillis());
-    //invoiceFacts.setDeviceInterface("DESKTOP");
-    //invoiceFacts.setProductType("FLIGHT");
-    //invoiceFacts.setProductKey("FL01");
-
+    invoiceFacts.setCurrency("IDR");
+    invoiceFacts.setAmount(456456);
+    invoiceFacts.setTime(System.currentTimeMillis());
+    invoiceFacts.setDeviceInterface("DESKTOP");
+    invoiceFacts.setProductType("FLIGHT");
+    invoiceFacts.setProductKey("FL01");
     return invoiceFacts;
+  }
+
+  private void populateFacts(org.jeasy.rules.api.Facts facts, Object object) {
+    Field[] fields = object.getClass().getDeclaredFields();
+    for (Field field : fields) {
+      try {
+        field.setAccessible(true);
+        facts.put(field.getName(), field.get(object));
+      } catch (IllegalAccessException e) {
+        log.error(e.getMessage(), e);
+      }
+    }
+    log.info(facts.asMap().toString());
   }
 
   private PaymentMethodFacts getDefaultPaymentMethodFacts() {
