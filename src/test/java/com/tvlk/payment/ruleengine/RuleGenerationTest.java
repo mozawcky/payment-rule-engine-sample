@@ -72,7 +72,7 @@ public class RuleGenerationTest {
   @Test
   public void ruleEngineTest() throws IOException {
     Facts facts = getDefaultFacts();
-
+    log.info("facts {} ", facts.asMap());
     try {
       Rules rules = ruleFactory.createRules(paymentConfigRules.get(0));
       for (Rule rule : rules) {
@@ -99,6 +99,7 @@ public class RuleGenerationTest {
   private Facts getDefaultFacts() {
     Facts facts = new Facts();
     populateFacts(facts, getDefaultInvoiceFacts());
+    populateFacts(facts, getDefaultPaymentMethodFacts());
     return facts;
   }
 
@@ -129,7 +130,6 @@ public class RuleGenerationTest {
   private PaymentMethodFacts getDefaultPaymentMethodFacts() {
     PaymentMethodFacts paymentMethodFacts = new PaymentMethodFacts();
     paymentMethodFacts.setPaymentMethod("CREDIT_CARD");
-
     return paymentMethodFacts;
   }
 }
