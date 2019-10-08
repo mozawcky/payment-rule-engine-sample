@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -114,7 +115,15 @@ public class RuleGenerationTest {
     return invoiceFacts;
   }
 
-  private void populateFacts(org.jeasy.rules.api.Facts facts, Object object) {
+  /**
+   *
+   * @param facts
+   * @param object
+   */
+  private void populateFacts(Facts facts, Object object) {
+    if (Objects.isNull(facts)|| Objects.isNull(object)) {
+      throw new IllegalArgumentException("Invalid facts or object");
+    }
     Field[] fields = object.getClass().getDeclaredFields();
     for (Field field : fields) {
       try {
