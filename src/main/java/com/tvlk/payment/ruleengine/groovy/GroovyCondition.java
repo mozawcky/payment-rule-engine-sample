@@ -4,11 +4,13 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Condition;
 import org.jeasy.rules.api.Facts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 public class GroovyCondition implements Condition {

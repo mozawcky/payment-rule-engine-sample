@@ -29,7 +29,7 @@ import java.util.Set;
 public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
-  private List<PaymentConfigRules> paymentConfigRules = new ArrayList<>();
+  private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
 
   @Before
   @Test
@@ -63,7 +63,7 @@ public class RuleGenerationTest {
     finalRuleList.add(productRules);
     finalRuleList.add(paymentRules);
 
-    paymentConfigRules = finalRuleList;
+    paymentConfigRulesList = finalRuleList;
 
     log.info(finalRuleList.toString());
 
@@ -75,7 +75,7 @@ public class RuleGenerationTest {
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
-      Rules rules = ruleFactory.createRules(paymentConfigRules.get(0));
+      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0), 3);
       for (Rule rule : rules) {
         boolean ruleEvaluationResult = rule.evaluate(facts);
         log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);

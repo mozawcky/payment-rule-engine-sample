@@ -1,9 +1,5 @@
 package com.tvlk.payment.ruleengine.groovy;
 
-import java.io.Reader;
-import java.util.Arrays;
-import java.util.List;
-
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import org.jeasy.rules.api.Rule;
@@ -14,6 +10,10 @@ import org.jeasy.rules.support.ConditionalRuleGroup;
 import org.jeasy.rules.support.RuleDefinition;
 import org.jeasy.rules.support.RuleDefinitionReader;
 import org.jeasy.rules.support.UnitRuleGroup;
+
+import java.io.Reader;
+import java.util.Arrays;
+import java.util.List;
 
 public class GroovyRuleFactory {
 
@@ -54,10 +54,13 @@ public class GroovyRuleFactory {
 
   public Rules createRules(PaymentConfigRules paymentConfigRules) throws Exception {
     Rules rules = new Rules();
-    List<RuleDetail> ruleDetails = paymentConfigRules.getRuleDetails();
-    for (RuleDetail ruleDetail : ruleDetails) {
-      rules.register(createCompositeRule(paymentConfigRules));
-    }
+    rules.register(createCompositeRule(paymentConfigRules, Integer.MAX_VALUE));
+    return rules;
+  }
+
+  public Rules createRules(PaymentConfigRules paymentConfigRules, int priority) throws Exception {
+    Rules rules = new Rules();
+    rules.register(createCompositeRule(paymentConfigRules, priority));
     return rules;
   }
 
@@ -109,13 +112,27 @@ public class GroovyRuleFactory {
     return compositeRule;
   }
 
-  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
+  /**
+   *
+   * @param paymentConfigRules
+   * @param priority
+   * @return
+   */
+  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules, int priority) {
     CompositeRule compositeRule = new UnitRuleGroup(paymentConfigRules.getId());
-
+    compositeRule.setPriority(priority);
     for (RuleDetail ruleDetail : paymentConfigRules.getRuleDetails()) {
       compositeRule.addRule(ruleDetail.toGroovy());
     }
-
     return compositeRule;
+  }
+
+  /**
+   *
+   * @param paymentConfigRules
+   * @return
+   */
+  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
+    return createCompositeRule(paymentConfigRules, Integer.MAX_VALUE);
   }
 }
