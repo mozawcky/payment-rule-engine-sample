@@ -104,7 +104,7 @@ public class RuleGenerationTest {
         rulesList.add(rules);
       }
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
-      //rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
         final Set<Rule> failRules = new HashSet<>();
         final Set<Rule> successRules = new HashSet<>();
