@@ -40,23 +40,23 @@ public class RuleGenerationTest {
   public void ruleGenerationTest() throws IOException {
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-base-rule.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-base-rule.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     PaymentConfigRules paymentRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-payment-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-payment-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(base, paymentRules);
 
     PaymentConfigRules productRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-product-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-product-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(paymentRules, productRules);
 
     PaymentConfigRules subProductRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-sub-product-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-sub-product-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(productRules, subProductRules);
