@@ -1,0 +1,14 @@
+{
+  "productType": "FLIGHT",
+  "attributes": {
+    "CREDIT_CARD": {
+      "enabled": true
+    },
+    "BANK_TRANSFER": {
+      "enabled": true
+    },
+    "ALFAMART": {
+      "enabled": false
+    }
+  }
+}

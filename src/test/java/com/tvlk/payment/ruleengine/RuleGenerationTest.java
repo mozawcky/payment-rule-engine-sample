@@ -2,6 +2,7 @@ package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
+import com.tvlk.payment.ruleengine.model.attributes.ProductPaymentMethodAttributes;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
@@ -31,6 +32,7 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
+  private ProductPaymentMethodAttributes productPaymentMethodAttributes = new ProductPaymentMethodAttributes();
 
   @Before
   @Test
@@ -71,6 +73,16 @@ public class RuleGenerationTest {
     log.info(objectMapper.writeValueAsString(finalRuleList));
   }
 
+  @Before
+  @Test
+  public void attributeTest() throws IOException {
+    productPaymentMethodAttributes = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:attributes/product-payment-method-availability.json"),
+        StandardCharsets.UTF_8), ProductPaymentMethodAttributes.class);
+
+    log.info(productPaymentMethodAttributes.toString());
+  }
+
   @Test
   public void ruleEngineTest() throws IOException {
     boolean result = false;
@@ -91,6 +103,11 @@ public class RuleGenerationTest {
     } catch (Exception e) {
       log.error("Exception : ", e);
     }
+  }
+
+  @Test
+  public void attributesTest() throws IOException {
+
   }
 
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
@@ -118,7 +135,7 @@ public class RuleGenerationTest {
     invoiceFacts.setAmount(456456);
     invoiceFacts.setTime(System.currentTimeMillis());
     invoiceFacts.setDeviceInterface("DESKTOP");
-    invoiceFacts.setProductType("HOTEL");
+    invoiceFacts.setProductType("FLIGHT");
     invoiceFacts.setProductKey("FL01");
     return invoiceFacts;
   }
