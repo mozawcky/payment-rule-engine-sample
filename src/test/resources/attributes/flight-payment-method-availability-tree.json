@@ -1,0 +1,15 @@
+[
+  {
+    "id": "FLIGHT",
+    "paymentMethodList": [
+      "BANK_TRANSFER",
+      "CREDIT_CARD"
+    ]
+  },
+  {
+    "id": "FLIGHT_SUB",
+    "paymentMethodList": [
+      "BANK_TRANSFER"
+    ]
+  }
+]

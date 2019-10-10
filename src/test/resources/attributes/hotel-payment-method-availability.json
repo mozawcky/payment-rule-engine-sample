@@ -1,14 +1,14 @@
 {
-  "productType": "FLIGHT",
+  "productType": "HOTEL",
   "attributes": {
     "CREDIT_CARD": {
-      "enabled": true
+      "enabled": false
     },
     "BANK_TRANSFER": {
       "enabled": true
     },
     "ALFAMART": {
-      "enabled": false
+      "enabled": true
     }
   }
 }
