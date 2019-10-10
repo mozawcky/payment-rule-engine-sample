@@ -1,4 +1,4 @@
-package com.tvlk.payment.ruleengine.model.attributes;
+package com.tvlk.payment.ruleengine.model.configdetail;
 
 import com.tvlk.payment.ruleengine.model.PaymentMethod;
 import lombok.Data;
@@ -8,8 +8,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class AttributeNode {
+public class ConfigDetail {
   private String id;
   private List<PaymentMethod> paymentMethodList;
-  private AttributeNode nextNode;
+  private ConfigDetail nextNode;
 }
