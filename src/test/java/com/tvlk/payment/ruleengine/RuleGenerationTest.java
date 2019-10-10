@@ -37,7 +37,7 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
-  private JsonNode attributes;
+  private JsonNode configDetail;
 
   @Before
   @Test
@@ -80,8 +80,8 @@ public class RuleGenerationTest {
 
   @Before
   @Test
-  public void generateAtributeTree() throws IOException {
-    attributes = objectMapper.readTree(FileUtils.readFileToString(
+  public void generateConfigDetailTree() throws IOException {
+    configDetail = objectMapper.readTree(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:attributes/flight-payment-method-availability-tree.json"),
         StandardCharsets.UTF_8));
   }
@@ -202,7 +202,7 @@ public class RuleGenerationTest {
       }
 
       JsonNode locatedNode = null;
-      Iterator<JsonNode> attributeIterable = attributes.iterator();
+      Iterator<JsonNode> attributeIterable = configDetail.iterator();
       while (attributeIterable.hasNext() && !attributeIterable.next().path("id").equals("FLIGHT_SUB")) {
         locatedNode = attributeIterable.next();
       }
