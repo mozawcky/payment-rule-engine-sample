@@ -90,15 +90,13 @@ public class RuleGenerationTest {
   }
 
   @Test
-  public void paymentConfigUnitRuleGroupTest() throws IOException {
+  public void paymentConfigUnitRuleGroup1stMatchedTest() {
     Facts facts = getDefaultFacts();
-    final Set<Rule> failRules = new HashSet<>();
-    final Set<Rule> successRules = new HashSet<>();
-    facts.put("failRules", failRules);
-    facts.put("successRules", successRules);
-    log.info("facts {} ", facts.asMap());
+    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
+    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
+    facts.put("failConfigRules", failConfigRules);
+    facts.put("successConfigRules", successConfigRules);
 
-    Rules matchedRules = null;
     try {
       List<Rules> rulesList = new ArrayList<>();
       for (int i = 0; i < paymentConfigRulesList.size(); i++) {
@@ -108,27 +106,27 @@ public class RuleGenerationTest {
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       //rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
+        final Set<Rule> failRules = new HashSet<>();
+        final Set<Rule> successRules = new HashSet<>();
+        facts.put("failRules", failRules);
+        facts.put("successRules", successRules);
         if (rules.isEmpty()) {
           throw new IllegalArgumentException();
         }
         rulesEngine.fire(rules, facts);
         if (failRules.isEmpty()) {
-          matchedRules = rules;
           break;
         }
       }
     } catch (Exception e) {
       log.error("Exception : ", e);
     }
-    if (Objects.nonNull(matchedRules)) {
-      log.info("matchedRule {}", matchedRules.iterator().next().getName());
-      log.info("failRules {}", failRules);
-      log.info("successRules {}", successRules);
-    }
+    log.info("failConfigRules {}", failConfigRules);
+    log.info("successConfigRules {}", successConfigRules);
   }
 
   @Test
-  public void paymentConfigUnitRuleGroupUnmatchedTest() throws IOException {
+  public void paymentConfigUnitRuleGroup2ndMatchedTest() {
     Facts facts = getDefaultFacts();
     facts.put("productKey", "FL02");
 
