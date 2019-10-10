@@ -54,13 +54,22 @@ public class GroovyRuleFactory {
 
   public Rules createRules(PaymentConfigRules paymentConfigRules) throws Exception {
     Rules rules = new Rules();
-    rules.register(createCompositeRule(paymentConfigRules, Integer.MAX_VALUE));
+    rules.register(createCompositeRule(paymentConfigRules, paymentConfigRules.getPriority()));
     return rules;
   }
 
   public Rules createRules(PaymentConfigRules paymentConfigRules, int priority) throws Exception {
     Rules rules = new Rules();
     rules.register(createCompositeRule(paymentConfigRules, priority));
+    return rules;
+  }
+
+  public Rules createRules(List<PaymentConfigRules> paymentConfigRulesList) throws Exception {
+    Rules rules = new Rules();
+    for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
+      rules.register(createCompositeRule(paymentConfigRules, Integer.MAX_VALUE - paymentConfigRules.getPriority()));
+    }
+
     return rules;
   }
 

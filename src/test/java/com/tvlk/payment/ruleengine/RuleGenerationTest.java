@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,23 +37,23 @@ public class RuleGenerationTest {
   public void ruleGenerationTest() throws IOException {
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-base-rule.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-base-rule.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     PaymentConfigRules paymentRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-payment-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-payment-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(base, paymentRules);
 
     PaymentConfigRules productRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-product-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-product-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(paymentRules, productRules);
 
     PaymentConfigRules subProductRules = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:zaky-dennis-sub-product-rules.json"),
+        ResourceUtils.getFile("classpath:rules/zaky-dennis-sub-product-rules.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
 
     combineRules(productRules, subProductRules);
@@ -72,13 +73,20 @@ public class RuleGenerationTest {
 
   @Test
   public void ruleEngineTest() throws IOException {
+    boolean result = false;
+
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
-      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0), 3);
-      for (Rule rule : rules) {
-        boolean ruleEvaluationResult = rule.evaluate(facts);
-        log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
+      ListIterator<PaymentConfigRules> paymentConfigRulesListIterator = paymentConfigRulesList.listIterator();
+
+      while (!result && paymentConfigRulesListIterator.hasNext()) {
+        Rules rules = ruleFactory.createRules(paymentConfigRulesListIterator.next());
+
+        for (Rule rule : rules) {
+          result = rule.evaluate(facts);
+          log.info("Rule [{}] matched?, {}", rule, result);
+        }
       }
     } catch (Exception e) {
       log.error("Exception : ", e);
@@ -110,7 +118,7 @@ public class RuleGenerationTest {
     invoiceFacts.setAmount(456456);
     invoiceFacts.setTime(System.currentTimeMillis());
     invoiceFacts.setDeviceInterface("DESKTOP");
-    invoiceFacts.setProductType("FLIGHT");
+    invoiceFacts.setProductType("HOTEL");
     invoiceFacts.setProductKey("FL01");
     return invoiceFacts;
   }
