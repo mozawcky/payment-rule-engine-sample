@@ -1,5 +1,6 @@
 {
   "id": "FLIGHT_BANK_TRANSFER",
+  "description": "BANK_TRANSFER",
   "priority": 1,
   "ruleDetails": [
     {
