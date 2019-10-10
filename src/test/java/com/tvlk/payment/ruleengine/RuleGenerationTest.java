@@ -2,6 +2,7 @@ package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
+import com.tvlk.payment.ruleengine.listener.TvlkDefaultRuleListener;
 import com.tvlk.payment.ruleengine.model.attributes.ProductPaymentMethodAttributes;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,9 +23,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -85,25 +88,93 @@ public class RuleGenerationTest {
 
   @Test
   public void ruleEngineTest() throws IOException {
-    boolean result = false;
-
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
-      ListIterator<PaymentConfigRules> paymentConfigRulesListIterator = paymentConfigRulesList.listIterator();
-
-      while (!result && paymentConfigRulesListIterator.hasNext()) {
-        Rules rules = ruleFactory.createRules(paymentConfigRulesListIterator.next());
-
-        for (Rule rule : rules) {
-          result = rule.evaluate(facts);
-          log.info("Rule [{}] matched?, {}", rule, result);
-        }
+      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0), 3);
+      for (Rule rule : rules) {
+        boolean ruleEvaluationResult = rule.evaluate(facts);
+        log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
       }
     } catch (Exception e) {
       log.error("Exception : ", e);
     }
   }
+
+  @Test
+  public void paymentConfigUnitRuleGroup1stMatchedTest() {
+    Facts facts = getDefaultFacts();
+    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
+    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
+    facts.put("failConfigRules", failConfigRules);
+    facts.put("successConfigRules", successConfigRules);
+
+    try {
+      List<Rules> rulesList = new ArrayList<>();
+      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
+        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+        rulesList.add(rules);
+      }
+      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+      for (Rules rules : rulesList) {
+        final Set<Rule> failRules = new HashSet<>();
+        final Set<Rule> successRules = new HashSet<>();
+        facts.put("failRules", failRules);
+        facts.put("successRules", successRules);
+        if (rules.isEmpty()) {
+          throw new IllegalArgumentException();
+        }
+        rulesEngine.fire(rules, facts);
+        if (failRules.isEmpty()) {
+          break;
+        }
+      }
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+    log.info("failConfigRules {}", failConfigRules);
+    log.info("successConfigRules {}", successConfigRules);
+  }
+
+  @Test
+  public void paymentConfigUnitRuleGroup2ndMatchedTest() {
+    Facts facts = getDefaultFacts();
+    facts.put("productKey", "FL02");
+
+    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
+    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
+    facts.put("failConfigRules", failConfigRules);
+    facts.put("successConfigRules", successConfigRules);
+
+    try {
+      List<Rules> rulesList = new ArrayList<>();
+      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
+        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+        rulesList.add(rules);
+      }
+      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+      for (Rules rules : rulesList) {
+        final Set<Rule> failRules = new HashSet<>();
+        final Set<Rule> successRules = new HashSet<>();
+        facts.put("failRules", failRules);
+        facts.put("successRules", successRules);
+        if (rules.isEmpty()) {
+          throw new IllegalArgumentException();
+        }
+        rulesEngine.fire(rules, facts);
+        if (failRules.isEmpty()) {
+          break;
+        }
+      }
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+    log.info("failConfigRules {}", failConfigRules);
+    log.info("successConfigRules {}", successConfigRules);
+  }
+
 
   @Test
   public void attributesTest() throws IOException {

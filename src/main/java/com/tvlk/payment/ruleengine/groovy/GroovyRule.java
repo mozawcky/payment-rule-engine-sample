@@ -1,7 +1,5 @@
 package com.tvlk.payment.ruleengine.groovy;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Condition;
@@ -9,13 +7,21 @@ import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.core.BasicRule;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.StringJoiner;
+
 @Data
 public class GroovyRule extends BasicRule {
 
   private Condition condition = Condition.FALSE;
   private List<Action> actions = new ArrayList<>();
 
-  /** Create a new Groovy rule. */
+  /**
+   * Create a new Groovy rule.
+   */
   public GroovyRule() {
     super(Rule.DEFAULT_NAME, Rule.DEFAULT_DESCRIPTION, Rule.DEFAULT_PRIORITY);
   }
@@ -77,7 +83,19 @@ public class GroovyRule extends BasicRule {
 
   @Override
   public boolean evaluate(Facts facts) {
-    return condition.evaluate(facts);
+    boolean result = condition.evaluate(facts);
+    if (result) {
+      Set<Rule> successRules = facts.get("successRules");
+      if (Objects.nonNull(successRules)) {
+        successRules.add(this);
+      }
+    } else {
+      Set<Rule> failRules = facts.get("failRules");
+      if (Objects.nonNull(failRules)) {
+        failRules.add(this);
+      }
+    }
+    return result;
   }
 
   @Override
@@ -85,5 +103,16 @@ public class GroovyRule extends BasicRule {
     for (Action action : actions) {
       action.execute(facts);
     }
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", GroovyRule.class.getSimpleName() + "[", "]")
+        .add("condition=" + condition)
+        .add("actions=" + actions)
+        .add("name='" + name + "'")
+        .add("description='" + description + "'")
+        .add("priority=" + priority)
+        .toString();
   }
 }
