@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 
 @Data
 public class GroovyRule extends BasicRule {
@@ -102,5 +103,16 @@ public class GroovyRule extends BasicRule {
     for (Action action : actions) {
       action.execute(facts);
     }
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", GroovyRule.class.getSimpleName() + "[", "]")
+        .add("condition=" + condition)
+        .add("actions=" + actions)
+        .add("name='" + name + "'")
+        .add("description='" + description + "'")
+        .add("priority=" + priority)
+        .toString();
   }
 }
