@@ -214,32 +214,6 @@ public class RuleGenerationTest {
     }
   }
 
-  @Test
-  public void bank_transfer_hotel_test() throws Exception {
-    boolean result = false;
-
-    List<PaymentConfigRules> rulesList = generateBankTransferHotelRule();
-    Facts facts = getDefaultFacts();
-    facts.put("produtType", "HOTEL");
-
-    log.info("facts {} ", facts.asMap());
-
-    try {
-      ListIterator<PaymentConfigRules> rulesListIterator = rulesList.listIterator();
-
-      while (!result && rulesListIterator.hasNext()) {
-        Rules rules = ruleFactory.createRules(rulesListIterator.next());
-
-        for (Rule rule : rules) {
-          result = rule.evaluate(facts);
-          log.info("Rule [{}] matched?, {}", rule, result);
-        }
-      }
-    } catch (Exception e) {
-      log.error("Exception : ", e);
-    }
-  }
-
   private List<PaymentConfigRules> generateBankTransferFlightRule() throws IOException {
     PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:rules/bank-transfer-availability-base-rule.json"),
@@ -261,23 +235,6 @@ public class RuleGenerationTest {
     finalRuleList.add(productRule);
     finalRuleList.add(baseRule);
 
-    return finalRuleList;
-  }
-
-  private List<PaymentConfigRules> generateBankTransferHotelRule() throws IOException {
-    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-base-rule.json"),
-        StandardCharsets.UTF_8), PaymentConfigRules.class);
-
-    PaymentConfigRules productRule = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-hotel-rule.json"),
-        StandardCharsets.UTF_8), PaymentConfigRules.class);
-    combineRules(baseRule, productRule);
-
-    List<PaymentConfigRules> finalRuleList = new ArrayList<>();
-    finalRuleList.add(productRule);
-    finalRuleList.add(baseRule);
-    
     return finalRuleList;
   }
 
