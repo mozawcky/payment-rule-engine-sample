@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.ListIterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -197,11 +197,12 @@ public class RuleGenerationTest {
   }
 
   /**
+   *
    * @param facts
    * @param object
    */
   private void populateFacts(Facts facts, Object object) {
-    if (Objects.isNull(facts) || Objects.isNull(object)) {
+    if (Objects.isNull(facts)|| Objects.isNull(object)) {
       throw new IllegalArgumentException("Invalid facts or object");
     }
     Field[] fields = object.getClass().getDeclaredFields();
