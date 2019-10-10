@@ -1,9 +1,9 @@
 package com.tvlk.payment.ruleengine;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
 import com.tvlk.payment.ruleengine.listener.TvlkDefaultRuleListener;
-import com.tvlk.payment.ruleengine.model.attributes.ProductPaymentMethodAttributes;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
@@ -25,7 +25,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -35,11 +37,11 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
-  private ProductPaymentMethodAttributes productPaymentMethodAttributes = new ProductPaymentMethodAttributes();
+  private JsonNode attributes;
 
   @Before
   @Test
-  public void ruleGenerationTest() throws IOException {
+  public void generateRules() throws IOException {
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:rules/zaky-dennis-base-rule.json"),
@@ -78,12 +80,10 @@ public class RuleGenerationTest {
 
   @Before
   @Test
-  public void attributeTest() throws IOException {
-    productPaymentMethodAttributes = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:attributes/product-payment-method-availability.json"),
-        StandardCharsets.UTF_8), ProductPaymentMethodAttributes.class);
-
-    log.info(productPaymentMethodAttributes.toString());
+  public void generateAtributeTree() throws IOException {
+    attributes = objectMapper.readTree(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:attributes/flight-payment-method-availability-tree.json"),
+        StandardCharsets.UTF_8));
   }
 
   @Test
@@ -177,8 +177,108 @@ public class RuleGenerationTest {
 
 
   @Test
-  public void attributesTest() throws IOException {
+  public void bank_transfer_flight_sub_test() throws Exception {
+    boolean result = false;
+    Rule resultRule = null;
 
+    List<PaymentConfigRules> rulesList = generateBankTransferFlightRule();
+    Facts facts = getDefaultFacts();
+
+    log.info("facts {} ", facts.asMap());
+
+    try {
+      ListIterator<PaymentConfigRules> rulesListIterator = rulesList.listIterator();
+
+      while (!result && rulesListIterator.hasNext()) {
+        Rules rules = ruleFactory.createRules(rulesListIterator.next());
+
+        for (Rule rule : rules) {
+          result = rule.evaluate(facts);
+          log.info("Rule [{}] matched?, {}", rule, result);
+          if (result) {
+            resultRule = rule;
+          }
+        }
+      }
+
+      JsonNode locatedNode = null;
+      Iterator<JsonNode> attributeIterable = attributes.iterator();
+      while (attributeIterable.hasNext() && !attributeIterable.next().path("id").equals("FLIGHT_SUB")) {
+        locatedNode = attributeIterable.next();
+      }
+
+      log.info("Rule : " + resultRule.getDescription());
+      log.info("Attribute : " + locatedNode.path("paymentMethodList"));
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+  }
+
+  @Test
+  public void bank_transfer_hotel_test() throws Exception {
+    boolean result = false;
+
+    List<PaymentConfigRules> rulesList = generateBankTransferHotelRule();
+    Facts facts = getDefaultFacts();
+    facts.put("produtType", "HOTEL");
+
+    log.info("facts {} ", facts.asMap());
+
+    try {
+      ListIterator<PaymentConfigRules> rulesListIterator = rulesList.listIterator();
+
+      while (!result && rulesListIterator.hasNext()) {
+        Rules rules = ruleFactory.createRules(rulesListIterator.next());
+
+        for (Rule rule : rules) {
+          result = rule.evaluate(facts);
+          log.info("Rule [{}] matched?, {}", rule, result);
+        }
+      }
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+  }
+
+  private List<PaymentConfigRules> generateBankTransferFlightRule() throws IOException {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    PaymentConfigRules productRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-flight-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, productRule);
+
+    PaymentConfigRules subProductRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-flight-sub-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    combineRules(productRule, subProductRule);
+
+    List<PaymentConfigRules> finalRuleList = new ArrayList<>();
+    finalRuleList.add(subProductRule);
+    finalRuleList.add(productRule);
+    finalRuleList.add(baseRule);
+
+    return finalRuleList;
+  }
+
+  private List<PaymentConfigRules> generateBankTransferHotelRule() throws IOException {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    PaymentConfigRules productRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:rules/bank-transfer-availability-hotel-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, productRule);
+
+    List<PaymentConfigRules> finalRuleList = new ArrayList<>();
+    finalRuleList.add(productRule);
+    finalRuleList.add(baseRule);
+    
+    return finalRuleList;
   }
 
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
