@@ -2,6 +2,7 @@ package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
+import com.tvlk.payment.ruleengine.listener.TvlkDefaultRuleListener;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
+import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +22,10 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -85,6 +89,83 @@ public class RuleGenerationTest {
     }
   }
 
+  @Test
+  public void paymentConfigUnitRuleGroupTest() throws IOException {
+    Facts facts = getDefaultFacts();
+    final Set<Rule> failRules = new HashSet<>();
+    final Set<Rule> successRules = new HashSet<>();
+    facts.put("failRules", failRules);
+    facts.put("successRules", successRules);
+    log.info("facts {} ", facts.asMap());
+
+    Rules matchedRules = null;
+    try {
+      List<Rules> rulesList = new ArrayList<>();
+      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
+        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+        rulesList.add(rules);
+      }
+      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+      //rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+      for (Rules rules : rulesList) {
+        if (rules.isEmpty()) {
+          throw new IllegalArgumentException();
+        }
+        rulesEngine.fire(rules, facts);
+        if (failRules.isEmpty()) {
+          matchedRules = rules;
+          break;
+        }
+      }
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+    if (Objects.nonNull(matchedRules)) {
+      log.info("matchedRule {}", matchedRules.iterator().next().getName());
+      log.info("failRules {}", failRules);
+      log.info("successRules {}", successRules);
+    }
+  }
+
+  @Test
+  public void paymentConfigUnitRuleGroupUnmatchedTest() throws IOException {
+    Facts facts = getDefaultFacts();
+    facts.put("productKey", "FL02");
+
+    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
+    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
+    facts.put("failConfigRules", failConfigRules);
+    facts.put("successConfigRules", successConfigRules);
+
+    try {
+      List<Rules> rulesList = new ArrayList<>();
+      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
+        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+        rulesList.add(rules);
+      }
+      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+      for (Rules rules : rulesList) {
+        final Set<Rule> failRules = new HashSet<>();
+        final Set<Rule> successRules = new HashSet<>();
+        facts.put("failRules", failRules);
+        facts.put("successRules", successRules);
+        if (rules.isEmpty()) {
+          throw new IllegalArgumentException();
+        }
+        rulesEngine.fire(rules, facts);
+        if (failRules.isEmpty()) {
+          break;
+        }
+      }
+    } catch (Exception e) {
+      log.error("Exception : ", e);
+    }
+    log.info("failConfigRules {}", failConfigRules);
+    log.info("successConfigRules {}", successConfigRules);
+  }
+
+
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
     Set<String> toRuleNames = new HashSet<>();
     for (RuleDetail ruleDetail : to.getRuleDetails()) {
@@ -116,12 +197,11 @@ public class RuleGenerationTest {
   }
 
   /**
-   *
    * @param facts
    * @param object
    */
   private void populateFacts(Facts facts, Object object) {
-    if (Objects.isNull(facts)|| Objects.isNull(object)) {
+    if (Objects.isNull(facts) || Objects.isNull(object)) {
       throw new IllegalArgumentException("Invalid facts or object");
     }
     Field[] fields = object.getClass().getDeclaredFields();

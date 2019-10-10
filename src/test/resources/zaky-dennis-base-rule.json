@@ -19,7 +19,7 @@
     {
       "name": "PRODUCT_TYPE",
       "description": "Check if product type is allowed",
-      "field": "facts.productType",
+      "field": "productType",
       "operator": "IN",
       "value": ["\"FLIGHT\"", "\"HOTEL\""]
     }
