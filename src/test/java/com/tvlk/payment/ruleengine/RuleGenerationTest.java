@@ -104,7 +104,7 @@ public class RuleGenerationTest {
         Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
         rulesList.add(rules);
       }
-      
+
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
@@ -128,6 +128,16 @@ public class RuleGenerationTest {
     Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
   }
 
+  /**
+   * In case of having multiple products in the request, we should:
+   * 1. Create list of facts per product type such as Hotel, Flight, Hotel+Flight
+   * 2. Evaluate each fact against the combined rules.
+   * 3. Each fact will match a rule which return a config details.
+   * 4. After evaluation we can have few matched rules for all facts. Take the intersection of those config details
+   * Flight with sub product FLO1 have config details of [BANK_TRANSFER, CC, ATM]
+   * Hotel with sub product HO11 have config details of [BANK_TRANSFER, CC]
+   * => final config details for this payment option request is [BANK_TRANSFER, CC]
+   */
   @Test
   public void paymentConfigUnitRuleGroup2ndMatchedTest() {
     Facts facts = getDefaultFacts();
@@ -168,7 +178,6 @@ public class RuleGenerationTest {
     Assert.assertNotNull(successConfigRules.get("FLIGHT"));
   }
 
-
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
     Set<String> toRuleNames = new HashSet<>();
     for (RuleDetail ruleDetail : to.getRuleDetails()) {
@@ -200,12 +209,11 @@ public class RuleGenerationTest {
   }
 
   /**
-   *
    * @param facts
    * @param object
    */
   private void populateFacts(Facts facts, Object object) {
-    if (Objects.isNull(facts)|| Objects.isNull(object)) {
+    if (Objects.isNull(facts) || Objects.isNull(object)) {
       throw new IllegalArgumentException("Invalid facts or object");
     }
     Field[] fields = object.getClass().getDeclaredFields();

@@ -25,6 +25,7 @@ public class TvlkDefaultRuleListener implements RuleListener {
         final String ruleName = rule.getName();
         if (evaluationResult) {
             Set<Rule> successRules = facts.get(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY);
+            // TODO: if rule is matched, we can perform action to get specific config details. E.g: BANK_TRANSFER, CC, ATM BNI
             Map<String, Set<Rule>> successConfigRules = facts.get(Constants.FACTS_SUCCESS_RULE_MAP_KEY);
             if (Objects.nonNull(successConfigRules)) {
                 successConfigRules.put(ruleName, successRules);
