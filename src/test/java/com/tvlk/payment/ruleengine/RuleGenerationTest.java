@@ -148,8 +148,8 @@ public class RuleGenerationTest {
     Facts facts = getDefaultFacts();
     facts.put("productKey", "FL02"); // Change fact value to make it fail when being evaluated by sample sub product rule
 
-    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
-    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
     facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
