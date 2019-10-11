@@ -1,18 +1,19 @@
 package com.tvlk.payment.ruleengine.listener;
 
+import com.tvlk.payment.ruleengine.Constants;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.RuleListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
+@Data
 public class TvlkDefaultRuleListener implements RuleListener {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TvlkDefaultRuleListener.class);
 
     @Override
     public boolean beforeEvaluate(final Rule rule, final Facts facts) {
@@ -23,18 +24,16 @@ public class TvlkDefaultRuleListener implements RuleListener {
     public void afterEvaluate(final Rule rule, final Facts facts, final boolean evaluationResult) {
         final String ruleName = rule.getName();
         if (evaluationResult) {
-            LOGGER.debug("Rule '{}' triggered", ruleName);
-            Set<Rule> successRules = facts.get("successRules");
-            Map<String, Set<Rule>> successConfigRules = facts.get("successConfigRules");
+            Set<Rule> successRules = facts.get(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY);
+            Map<String, Set<Rule>> successConfigRules = facts.get(Constants.FACTS_SUCCESS_RULE_MAP_KEY);
             if (Objects.nonNull(successConfigRules)) {
-                successConfigRules.put(rule.getName(), successRules);
+                successConfigRules.put(ruleName, successRules);
             }
         } else {
-            LOGGER.debug("Rule '{}' has been evaluated to false, it has not been executed", ruleName);
-            Set<Rule> failRules = facts.get("failRules");
-            Map<String, Set<Rule>> failConfigRules = facts.get("failConfigRules");
+            Set<Rule> failRules = facts.get(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY);
+            Map<String, Set<Rule>> failConfigRules = facts.get(Constants.FACTS_FAIL_RULE_MAP_KEY);
             if (Objects.nonNull(failConfigRules)) {
-                failConfigRules.put(rule.getName(), failRules);
+                failConfigRules.put(ruleName, failRules);
             }
         }
     }

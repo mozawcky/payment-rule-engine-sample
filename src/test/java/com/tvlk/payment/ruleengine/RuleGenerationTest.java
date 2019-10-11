@@ -14,6 +14,7 @@ import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.core.DefaultRulesEngine;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
@@ -94,8 +95,8 @@ public class RuleGenerationTest {
     Facts facts = getDefaultFacts();
     final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
     final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
-    facts.put("failConfigRules", failConfigRules);
-    facts.put("successConfigRules", successConfigRules);
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
     try {
       List<Rules> rulesList = new ArrayList<>();
@@ -106,13 +107,11 @@ public class RuleGenerationTest {
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
+        Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
         final Set<Rule> successRules = new HashSet<>();
-        facts.put("failRules", failRules);
-        facts.put("successRules", successRules);
-        if (rules.isEmpty()) {
-          throw new IllegalArgumentException();
-        }
+        facts.put(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY, failRules);
+        facts.put(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY, successRules);
         rulesEngine.fire(rules, facts);
         if (failRules.isEmpty()) {
           break;
@@ -128,12 +127,12 @@ public class RuleGenerationTest {
   @Test
   public void paymentConfigUnitRuleGroup2ndMatchedTest() {
     Facts facts = getDefaultFacts();
-    facts.put("productKey", "FL02");
+    facts.put("productKey", "FL02"); // Change fact value to make it fail when being evaluated by sample sub product rule
 
     final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
     final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
-    facts.put("failConfigRules", failConfigRules);
-    facts.put("successConfigRules", successConfigRules);
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
     try {
       List<Rules> rulesList = new ArrayList<>();
@@ -144,13 +143,11 @@ public class RuleGenerationTest {
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
+        Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
         final Set<Rule> successRules = new HashSet<>();
-        facts.put("failRules", failRules);
-        facts.put("successRules", successRules);
-        if (rules.isEmpty()) {
-          throw new IllegalArgumentException();
-        }
+        facts.put(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY, failRules);
+        facts.put(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY, successRules);
         rulesEngine.fire(rules, facts);
         if (failRules.isEmpty()) {
           break;
