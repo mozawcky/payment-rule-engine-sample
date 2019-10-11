@@ -2,24 +2,25 @@ package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tvlk.payment.ruleengine.core.DefaultRulesEngine;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
-import com.tvlk.payment.ruleengine.listener.TvlkDefaultRuleListener;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
+import com.tvlk.payment.ruleengine.model.rules.RuleResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
-import org.jeasy.rules.core.DefaultRulesEngine;
+import org.jeasy.rules.core.RulesEngineParameters;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -38,10 +39,14 @@ public class RuleGenerationTest {
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
   private JsonNode configDetail;
+  private DefaultRulesEngine rulesEngine;
+  private List<Rules> rulesList = new ArrayList<>();
+  private Rules testRules;
+
 
   @Before
   @Test
-  public void generateRules() throws IOException {
+  public void generateRules() throws Exception {
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:zaky-dennis-base-rule.json"),
@@ -72,10 +77,20 @@ public class RuleGenerationTest {
     finalRuleList.add(paymentRules);
 
     paymentConfigRulesList = finalRuleList;
-
     log.info(finalRuleList.toString());
-
     log.info(objectMapper.writeValueAsString(finalRuleList));
+
+    // Initialize rule engine
+    rulesEngine = new DefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
+
+    // Derive Rules from PaymentConfigRules
+    for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
+      Rules rules = ruleFactory.createRules(paymentConfigRules);
+      rulesList.add(rules);
+    }
+
+    testRules = ruleFactory.createRules(paymentConfigRulesList);
+    log.info(testRules.toString());
   }
 
   @Before
@@ -87,11 +102,11 @@ public class RuleGenerationTest {
   }
 
   @Test
-  public void ruleEngineTest() throws IOException {
+  public void ruleEngineTest() {
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
-      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0), 3);
+      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0));
       for (Rule rule : rules) {
         boolean ruleEvaluationResult = rule.evaluate(facts);
         log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
@@ -104,77 +119,46 @@ public class RuleGenerationTest {
   @Test
   public void paymentConfigUnitRuleGroup1stMatchedTest() {
     Facts facts = getDefaultFacts();
-    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
-    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
-    facts.put("failConfigRules", failConfigRules);
-    facts.put("successConfigRules", successConfigRules);
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_RULE_RESULT_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
-    try {
-      List<Rules> rulesList = new ArrayList<>();
-      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
-        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
-        rulesList.add(rules);
-      }
-      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
-      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
-      for (Rules rules : rulesList) {
-        final Set<Rule> failRules = new HashSet<>();
-        final Set<Rule> successRules = new HashSet<>();
-        facts.put("failRules", failRules);
-        facts.put("successRules", successRules);
-        if (rules.isEmpty()) {
-          throw new IllegalArgumentException();
-        }
-        rulesEngine.fire(rules, facts);
-        if (failRules.isEmpty()) {
-          break;
-        }
-      }
-    } catch (Exception e) {
-      log.error("Exception : ", e);
-    }
+    rulesEngine.fire(testRules, facts);
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
+    Assert.assertTrue(failConfigRules.isEmpty());
+    Assert.assertEquals(1, successConfigRules.size());
+    Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
   }
 
+  /**
+   * In case of having multiple products in the request, we should:
+   * 1. Create list of facts per product type such as Hotel, Flight, Hotel+Flight
+   * 2. Evaluate each fact against the combined rules.
+   * 3. Each fact will match a rule which return a config details.
+   * 4. After evaluation we can have few matched rules for all facts. Take the intersection of those config details
+   * Flight with sub product FLO1 have config details of [BANK_TRANSFER, CC, ATM]
+   * Hotel with sub product HO11 have config details of [BANK_TRANSFER, CC]
+   * => final config details for this payment option request is [BANK_TRANSFER, CC]
+   */
   @Test
   public void paymentConfigUnitRuleGroup2ndMatchedTest() {
     Facts facts = getDefaultFacts();
-    facts.put("productKey", "FL02");
+    facts.put("productKey", "FL02"); // Change fact value to make it fail when being evaluated by sample sub product rule
 
     final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
     final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
-    facts.put("failConfigRules", failConfigRules);
-    facts.put("successConfigRules", successConfigRules);
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
-    try {
-      List<Rules> rulesList = new ArrayList<>();
-      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
-        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
-        rulesList.add(rules);
-      }
-      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
-      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
-      for (Rules rules : rulesList) {
-        final Set<Rule> failRules = new HashSet<>();
-        final Set<Rule> successRules = new HashSet<>();
-        facts.put("failRules", failRules);
-        facts.put("successRules", successRules);
-        if (rules.isEmpty()) {
-          throw new IllegalArgumentException();
-        }
-        rulesEngine.fire(rules, facts);
-        if (failRules.isEmpty()) {
-          break;
-        }
-      }
-    } catch (Exception e) {
-      log.error("Exception : ", e);
-    }
+    rulesEngine.fire(testRules, facts);
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
+    Assert.assertFalse(failConfigRules.isEmpty());
+    Assert.assertEquals(1, successConfigRules.size());
+    Assert.assertNotNull(successConfigRules.get("FLIGHT"));
   }
-
 
   @Test
   public void bank_transfer_flight_sub_test() throws Exception {
@@ -268,12 +252,11 @@ public class RuleGenerationTest {
   }
 
   /**
-   *
    * @param facts
    * @param object
    */
   private void populateFacts(Facts facts, Object object) {
-    if (Objects.isNull(facts)|| Objects.isNull(object)) {
+    if (Objects.isNull(facts) || Objects.isNull(object)) {
       throw new IllegalArgumentException("Invalid facts or object");
     }
     Field[] fields = object.getClass().getDeclaredFields();

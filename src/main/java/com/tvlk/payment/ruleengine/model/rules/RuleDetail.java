@@ -4,11 +4,13 @@ import com.tvlk.payment.ruleengine.groovy.GroovyRule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jeasy.rules.api.Rule;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RuleDetail {
+
   private String name;
   private String description;
   private String field;
@@ -17,25 +19,22 @@ public class RuleDetail {
 
   public GroovyRule toGroovy() {
 
-    String condition = "";
+    String condition;
     switch (operator) {
       case EQUAL:
-        condition = field + ".equals(" + "'" + value + "')";
+        condition = field + operator.getOperator() + "(" + "'" + value + "')";
         break;
       case IN:
-        condition = value.toString() + ".contains(" + field + ")";
+        condition = value.toString() + operator.getOperator() + "(" + field + ")";
         break;
       case LTE:
-        condition = field + "<=" + value;
-        break;
       case LT:
-        condition = field + "<" + value;
-        break;
       case GTE:
-        condition = field + ">=" + value;
-        break;
       case GT:
-        condition = field + ">" + value;
+        condition = field + operator.getOperator() + value;
+        break;
+      default:
+        condition = "Boolean.FALSE";
         break;
     }
 
