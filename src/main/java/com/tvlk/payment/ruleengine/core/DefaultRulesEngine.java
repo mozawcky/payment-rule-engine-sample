@@ -153,10 +153,11 @@ public final class DefaultRulesEngine extends AbstractRuleEngine {
     }
 
     private boolean triggerListenersBeforeEvaluate(Rule rule, Facts facts) {
+        if (rule instanceof UnitRuleGroupWithResult) {
+            facts.put(Constants.FACTS_RULE_RESULT_KEY, ((UnitRuleGroupWithResult) rule).getRuleResult());
+        }
+
         for (RuleListener ruleListener : ruleListeners) {
-            if (rule instanceof UnitRuleGroupWithResult) {
-                facts.put(Constants.FACTS_RULE_RESULT_KEY, ((UnitRuleGroupWithResult) rule).getRuleResult());
-            }
             if (!ruleListener.beforeEvaluate(rule, facts)) {
                 return false;
             }

@@ -124,8 +124,9 @@ public class GroovyRuleFactory {
   private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
     CompositeRule compositeRule = new UnitRuleGroupWithResult(paymentConfigRules.getId());
     compositeRule.setPriority(Integer.MAX_VALUE - paymentConfigRules.getPriority());
-    for (RuleDetail ruleDetail : paymentConfigRules.getRuleDetails()) {
-      compositeRule.addRule(ruleDetail.toGroovy());
+    for (int i = 0; i < paymentConfigRules.getRuleDetails().size(); i++) {
+      RuleDetail ruleDetail = paymentConfigRules.getRuleDetails().get(i);
+      compositeRule.addRule(ruleDetail.toGroovy(++i));
     }
     return compositeRule;
   }

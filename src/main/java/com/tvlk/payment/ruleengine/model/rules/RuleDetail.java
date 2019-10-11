@@ -43,4 +43,8 @@ public class RuleDetail {
         .description(description)
         .when(condition);
   }
+
+  public GroovyRule toGroovy(int priority) {
+    return toGroovy().priority(priority);
+  }
 }
