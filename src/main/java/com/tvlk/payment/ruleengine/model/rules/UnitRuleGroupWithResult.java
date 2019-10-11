@@ -8,6 +8,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.support.UnitRuleGroup;
 
+import java.util.HashSet;
+
 @Slf4j
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -24,5 +26,10 @@ public class UnitRuleGroupWithResult extends UnitRuleGroup {
   public UnitRuleGroupWithResult(String name) {
     super(name);
     this.ruleResult = new RuleResult(name);
+  }
+
+  public UnitRuleGroupWithResult(String name, String description, int priority, PaymentConfigDetail paymentConfigDetail) {
+    super(name, description, priority);
+    this.ruleResult = new RuleResult(name, paymentConfigDetail, new HashSet<>(), new HashSet<>());
   }
 }

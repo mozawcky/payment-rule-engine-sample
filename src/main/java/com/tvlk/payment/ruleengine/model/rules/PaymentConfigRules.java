@@ -14,5 +14,6 @@ public class PaymentConfigRules {
   String id;
   String description;
   int priority;
+  PaymentConfigDetail paymentConfigDetail;
   List<RuleDetail> ruleDetails;
 }

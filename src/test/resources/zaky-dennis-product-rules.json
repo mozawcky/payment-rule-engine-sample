@@ -1,6 +1,13 @@
 {
   "id": "FLIGHT",
   "priority": 2,
+  "paymentConfigDetail": {
+    "paymentMethodList": [
+      "BANK_TRANSFER",
+      "CREDIT_CARD",
+      "ALFAMART"
+    ]
+  },
   "ruleDetails": [
     {
       "name": "PRODUCT_TYPE",

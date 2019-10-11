@@ -1,8 +1,8 @@
 package com.tvlk.payment.ruleengine.groovy;
 
-import com.tvlk.payment.ruleengine.model.rules.UnitRuleGroupWithResult;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
+import com.tvlk.payment.ruleengine.model.rules.UnitRuleGroupWithResult;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.support.ActivationRuleGroup;
@@ -117,14 +117,13 @@ public class GroovyRuleFactory {
   }
 
   /**
-   *
    * @param paymentConfigRules
    * @return
    */
   private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
-    CompositeRule compositeRule = new UnitRuleGroupWithResult(paymentConfigRules.getId());
-    compositeRule.setDescription(paymentConfigRules.getDescription());
-    compositeRule.setPriority(Integer.MAX_VALUE - paymentConfigRules.getPriority());
+    UnitRuleGroupWithResult compositeRule = new UnitRuleGroupWithResult(paymentConfigRules.getId(), paymentConfigRules.getDescription(),
+                                                                        Integer.MAX_VALUE - paymentConfigRules.getPriority(),
+                                                                        paymentConfigRules.getPaymentConfigDetail());
     for (int i = 0; i < paymentConfigRules.getRuleDetails().size(); i++) {
       RuleDetail ruleDetail = paymentConfigRules.getRuleDetails().get(i);
       compositeRule.addRule(ruleDetail.toGroovy(++i));

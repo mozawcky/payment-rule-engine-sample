@@ -1,6 +1,11 @@
 {
   "id": "FLIGHT_SUB",
   "priority": 3,
+  "paymentConfigDetail": {
+    "paymentMethodList": [
+      "CREDIT_CARD"
+    ]
+  },
   "ruleDetails": [
     {
       "name": "SUB_PRODUCT_TYPE",

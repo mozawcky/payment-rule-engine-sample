@@ -16,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class RuleResult {
   String ruleName;
+  PaymentConfigDetail paymentConfigDetail;
   Set<Rule> failRuleSet;
   Set<Rule> successRuleSet;
 

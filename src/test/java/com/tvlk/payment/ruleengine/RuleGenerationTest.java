@@ -162,6 +162,22 @@ public class RuleGenerationTest {
   }
 
   @Test
+  public void bt_flight_sub_test() throws IOException {
+    Facts facts = getDefaultFacts();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+
+    rulesEngine.fire(testRules, facts);
+    log.info("failConfigRules {}", failConfigRules);
+    log.info("successConfigRules {}", successConfigRules);
+    Assert.assertEquals(0, failConfigRules.size());
+    Assert.assertEquals(1, successConfigRules.size());
+    Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
+  }
+
+  @Test
   public void bank_transfer_flight_sub_test() throws Exception {
     boolean result = false;
     Rule resultRule = null;
