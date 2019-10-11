@@ -23,6 +23,7 @@ public class GroovyRuleFactory {
   private static final List<String> ALLOWED_COMPOSITE_RULE_TYPES =
       Arrays.asList(
           UnitRuleGroup.class.getSimpleName(),
+          UnitRuleGroupWithResult.class.getSimpleName(),
           ConditionalRuleGroup.class.getSimpleName(),
           ActivationRuleGroup.class.getSimpleName());
 
@@ -95,6 +96,9 @@ public class GroovyRuleFactory {
     switch (ruleDefinition.getCompositeRuleType()) {
       case "UnitRuleGroup":
         compositeRule = new UnitRuleGroup(name);
+        break;
+      case "UnitRuleGroupWithResult":
+        compositeRule = new UnitRuleGroupWithResult(name);
         break;
       case "ActivationRuleGroup":
         compositeRule = new ActivationRuleGroup(name);
