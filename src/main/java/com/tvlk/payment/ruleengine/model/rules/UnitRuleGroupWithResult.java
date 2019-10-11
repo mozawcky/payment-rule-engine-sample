@@ -1,6 +1,6 @@
-package com.tvlk.payment.ruleengine.core;
+package com.tvlk.payment.ruleengine.model.rules;
 
-import com.tvlk.payment.ruleengine.RuleResult;
+import com.tvlk.payment.ruleengine.model.rules.RuleResult;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

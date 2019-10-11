@@ -1,6 +1,6 @@
 package com.tvlk.payment.ruleengine.groovy;
 
-import com.tvlk.payment.ruleengine.core.UnitRuleGroupWithResult;
+import com.tvlk.payment.ruleengine.model.rules.UnitRuleGroupWithResult;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import org.jeasy.rules.api.Rule;

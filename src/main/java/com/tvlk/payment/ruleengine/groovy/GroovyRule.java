@@ -1,7 +1,7 @@
 package com.tvlk.payment.ruleengine.groovy;
 
 import com.tvlk.payment.ruleengine.Constants;
-import com.tvlk.payment.ruleengine.RuleResult;
+import com.tvlk.payment.ruleengine.model.rules.RuleResult;
 import lombok.Data;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Condition;

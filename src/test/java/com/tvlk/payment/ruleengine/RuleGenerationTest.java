@@ -8,6 +8,7 @@ import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
+import com.tvlk.payment.ruleengine.model.rules.RuleResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;

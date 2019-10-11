@@ -1,4 +1,4 @@
-package com.tvlk.payment.ruleengine;
+package com.tvlk.payment.ruleengine.model.rules;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

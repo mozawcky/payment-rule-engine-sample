@@ -25,7 +25,8 @@
 package com.tvlk.payment.ruleengine.core;
 
 import com.tvlk.payment.ruleengine.Constants;
-import com.tvlk.payment.ruleengine.RuleResult;
+import com.tvlk.payment.ruleengine.model.rules.RuleResult;
+import com.tvlk.payment.ruleengine.model.rules.UnitRuleGroupWithResult;
 import org.jeasy.rules.api.Facts;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.RuleListener;
@@ -35,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 class DefaultRuleListener implements RuleListener {
 
