@@ -47,23 +47,23 @@ import java.util.Map;
  *
  * @author Mahmoud Ben Hassine (mahmoud.benhassine@icloud.com)
  */
-public final class DefaultRulesEngine extends AbstractRuleEngine {
+public final class TvlkDefaultRulesEngine extends AbstractRuleEngine {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRulesEngine.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TvlkDefaultRulesEngine.class);
 
     /**
-     * Create a new {@link DefaultRulesEngine} with default parameters.
+     * Create a new {@link TvlkDefaultRulesEngine} with default parameters.
      */
-    public DefaultRulesEngine() {
+    public TvlkDefaultRulesEngine() {
         super();
     }
 
     /**
-     * Create a new {@link DefaultRulesEngine}.
+     * Create a new {@link TvlkDefaultRulesEngine}.
      *
      * @param parameters of the engine
      */
-    public DefaultRulesEngine(final RulesEngineParameters parameters) {
+    public TvlkDefaultRulesEngine(final RulesEngineParameters parameters) {
         super(parameters);
     }
 

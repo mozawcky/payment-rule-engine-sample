@@ -37,9 +37,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
-class DefaultRuleListener implements RuleListener {
+class TvlkDefaultRuleListener implements RuleListener {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRuleListener.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TvlkDefaultRuleListener.class);
 
   @Override
   public boolean beforeEvaluate(final Rule rule, final Facts facts) {

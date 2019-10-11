@@ -33,13 +33,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
-class DefaultRulesEngineListener implements RulesEngineListener {
+class TvlkDefaultRulesEngineListener implements RulesEngineListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultRulesEngineListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TvlkDefaultRulesEngineListener.class);
 
     private RulesEngineParameters parameters;
 
-    DefaultRulesEngineListener(RulesEngineParameters parameters) {
+    TvlkDefaultRulesEngineListener(RulesEngineParameters parameters) {
         this.parameters = parameters;
     }
 

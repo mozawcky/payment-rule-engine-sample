@@ -2,7 +2,7 @@ package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tvlk.payment.ruleengine.core.DefaultRulesEngine;
+import com.tvlk.payment.ruleengine.core.TvlkDefaultRulesEngine;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
@@ -40,7 +40,7 @@ public class RuleGenerationTest {
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
   private JsonNode configDetail;
-  private DefaultRulesEngine rulesEngine;
+  private TvlkDefaultRulesEngine rulesEngine;
   private List<Rules> rulesList = new ArrayList<>();
   private Rules testRules;
 
@@ -82,7 +82,7 @@ public class RuleGenerationTest {
     log.info(objectMapper.writeValueAsString(finalRuleList));
 
     // Initialize rule engine
-    rulesEngine = new DefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
+    rulesEngine = new TvlkDefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
 
     // Derive Rules from PaymentConfigRules
     for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
