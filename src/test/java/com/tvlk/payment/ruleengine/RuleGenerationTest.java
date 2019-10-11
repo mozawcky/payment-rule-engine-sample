@@ -33,6 +33,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RuleGenerationTest {
@@ -120,17 +121,26 @@ public class RuleGenerationTest {
   @Test
   public void paymentConfigUnitRuleGroup1stMatchedTest() {
     Facts facts = getDefaultFacts();
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
     final Map<String, RuleResult> failConfigRules = new HashMap<>();
     final Map<String, RuleResult> successConfigRules = new HashMap<>();
-    facts.put(Constants.FACTS_RULE_RESULT_KEY, failConfigRules);
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
 
     rulesEngine.fire(testRules, facts);
+
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
-    Assert.assertTrue(failConfigRules.isEmpty());
-    Assert.assertEquals(1, successConfigRules.size());
-    Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
+    log.info("ruleResultSet {}", ruleResultSet);
+
+    Assert.assertEquals(1, ruleResultSet.size());
+    Assert
+        .assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());  // Only 1 rule matched
+    Assert.assertEquals(0, ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet())
+                                        .size()); // Only 0 rule failed and skipped the rest
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT_SUB".equals(r.getRuleName()) && r.getFailRuleSet().isEmpty())
+                                        .collect(Collectors.toSet()).size());
   }
 
   /**
@@ -148,33 +158,28 @@ public class RuleGenerationTest {
     Facts facts = getDefaultFacts();
     facts.put("productKey", "FL02"); // Change fact value to make it fail when being evaluated by sample sub product rule
 
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
     final Map<String, RuleResult> failConfigRules = new HashMap<>();
     final Map<String, RuleResult> successConfigRules = new HashMap<>();
     facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
 
     rulesEngine.fire(testRules, facts);
+
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
-    Assert.assertFalse(failConfigRules.isEmpty());
-    Assert.assertEquals(1, successConfigRules.size());
-    Assert.assertNotNull(successConfigRules.get("FLIGHT"));
-  }
+    log.info("ruleResultSet {}", ruleResultSet);
 
-  @Test
-  public void bt_flight_sub_test() throws IOException {
-    Facts facts = getDefaultFacts();
-    final Map<String, RuleResult> failConfigRules = new HashMap<>();
-    final Map<String, RuleResult> successConfigRules = new HashMap<>();
-    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
-    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
-
-    rulesEngine.fire(testRules, facts);
-    log.info("failConfigRules {}", failConfigRules);
-    log.info("successConfigRules {}", successConfigRules);
-    Assert.assertEquals(0, failConfigRules.size());
-    Assert.assertEquals(1, successConfigRules.size());
-    Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
+    Assert.assertEquals(2, ruleResultSet.size());
+    Assert
+        .assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());  // Only 1 rule matched
+    Assert.assertEquals(1,
+                        ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet()).size()); // Only 1 rule failed
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT_SUB".equals(r.getRuleName()) && r.getSuccessRuleSet().isEmpty())
+                                        .collect(Collectors.toSet()).size());
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT".equals(r.getRuleName()) && r.getFailRuleSet().isEmpty())
+                                        .collect(Collectors.toSet()).size());
   }
 
   @Test

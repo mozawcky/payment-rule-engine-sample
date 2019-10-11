@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Rule;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
@@ -24,5 +25,22 @@ public class RuleResult {
     this.ruleName = ruleName;
     this.failRuleSet = new HashSet<>();
     this.successRuleSet = new HashSet<>();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof RuleResult)) {
+      return false;
+    }
+    RuleResult that = (RuleResult) o;
+    return ruleName.equals(that.ruleName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(ruleName);
   }
 }

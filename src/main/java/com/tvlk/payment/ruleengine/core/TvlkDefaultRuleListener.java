@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class TvlkDefaultRuleListener implements RuleListener {
 
@@ -30,7 +31,12 @@ public class TvlkDefaultRuleListener implements RuleListener {
   @Override
   public void afterEvaluate(final Rule rule, final Facts facts, final boolean evaluationResult) {
     final String ruleName = rule.getName();
+    final Set<RuleResult> ruleResultSet = facts.get(Constants.FACTS_RULE_RESULT_SET_KEY);
     final RuleResult ruleResult = facts.get(Constants.FACTS_RULE_RESULT_KEY);
+    if (Objects.nonNull(ruleResultSet)) {
+      ruleResultSet.add(ruleResult);
+    }
+
     if (evaluationResult) {
       LOGGER.debug("Rule '{}' triggered", ruleName);
       Map<String, RuleResult> successConfigRules = facts.get(Constants.FACTS_SUCCESS_RULE_MAP_KEY);
