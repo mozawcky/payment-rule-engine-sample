@@ -35,10 +35,17 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
+  private DefaultRulesEngine rulesEngine;
+
+
 
   @Before
   @Test
   public void ruleGenerationTest() throws IOException {
+    // Initialize rule engine
+    rulesEngine = new DefaultRulesEngine();
+    rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+    
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:rules/zaky-dennis-base-rule.json"),
@@ -105,8 +112,6 @@ public class RuleGenerationTest {
         rulesList.add(rules);
       }
 
-      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
-      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
         Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
@@ -155,8 +160,6 @@ public class RuleGenerationTest {
         rulesList.add(rules);
       }
 
-      DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
-      rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
         Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
