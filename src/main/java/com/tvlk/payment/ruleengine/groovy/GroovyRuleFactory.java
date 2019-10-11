@@ -1,5 +1,6 @@
 package com.tvlk.payment.ruleengine.groovy;
 
+import com.tvlk.payment.ruleengine.core.UnitRuleGroupWithResult;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import org.jeasy.rules.api.Rule;
@@ -52,22 +53,16 @@ public class GroovyRuleFactory {
     return rules;
   }
 
-  public Rules createRules(PaymentConfigRules paymentConfigRules) throws Exception {
+  public Rules createRules(PaymentConfigRules paymentConfigRules) {
     Rules rules = new Rules();
-    rules.register(createCompositeRule(paymentConfigRules, paymentConfigRules.getPriority()));
+    rules.register(createCompositeRule(paymentConfigRules));
     return rules;
   }
 
-  public Rules createRules(PaymentConfigRules paymentConfigRules, int priority) throws Exception {
-    Rules rules = new Rules();
-    rules.register(createCompositeRule(paymentConfigRules, priority));
-    return rules;
-  }
-
-  public Rules createRules(List<PaymentConfigRules> paymentConfigRulesList) throws Exception {
+  public Rules createRules(List<PaymentConfigRules> paymentConfigRulesList) {
     Rules rules = new Rules();
     for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
-      rules.register(createCompositeRule(paymentConfigRules, Integer.MAX_VALUE - paymentConfigRules.getPriority()));
+      rules.register(createCompositeRule(paymentConfigRules));
     }
 
     return rules;
@@ -124,24 +119,14 @@ public class GroovyRuleFactory {
   /**
    *
    * @param paymentConfigRules
-   * @param priority
    * @return
    */
-  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules, int priority) {
-    CompositeRule compositeRule = new UnitRuleGroup(paymentConfigRules.getId());
-    compositeRule.setPriority(priority);
+  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
+    CompositeRule compositeRule = new UnitRuleGroupWithResult(paymentConfigRules.getId());
+    compositeRule.setPriority(Integer.MAX_VALUE - paymentConfigRules.getPriority());
     for (RuleDetail ruleDetail : paymentConfigRules.getRuleDetails()) {
       compositeRule.addRule(ruleDetail.toGroovy());
     }
     return compositeRule;
-  }
-
-  /**
-   *
-   * @param paymentConfigRules
-   * @return
-   */
-  private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
-    return createCompositeRule(paymentConfigRules, Integer.MAX_VALUE);
   }
 }

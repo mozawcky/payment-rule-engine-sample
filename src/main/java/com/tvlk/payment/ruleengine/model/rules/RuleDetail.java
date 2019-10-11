@@ -4,11 +4,13 @@ import com.tvlk.payment.ruleengine.groovy.GroovyRule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jeasy.rules.api.Rule;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RuleDetail {
+
   private String name;
   private String description;
   private String field;

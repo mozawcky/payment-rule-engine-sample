@@ -1,8 +1,8 @@
 package com.tvlk.payment.ruleengine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tvlk.payment.ruleengine.core.DefaultRulesEngine;
 import com.tvlk.payment.ruleengine.groovy.GroovyRuleFactory;
-import com.tvlk.payment.ruleengine.listener.TvlkDefaultRuleListener;
 import com.tvlk.payment.ruleengine.model.facts.Facts;
 import com.tvlk.payment.ruleengine.model.facts.InvoiceFacts;
 import com.tvlk.payment.ruleengine.model.facts.PaymentMethodFacts;
@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
-import org.jeasy.rules.core.DefaultRulesEngine;
+import org.jeasy.rules.core.RulesEngineParameters;
 import org.jeasy.rules.support.JsonRuleDefinitionReader;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,8 +34,9 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
-  private DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+  private DefaultRulesEngine rulesEngine;
   private List<Rules> rulesList = new ArrayList<>();
+  private Rules testRules;
 
 
   @Before
@@ -76,13 +77,16 @@ public class RuleGenerationTest {
     log.info(objectMapper.writeValueAsString(finalRuleList));
 
     // Initialize rule engine
-    rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+    rulesEngine = new DefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
 
     // Derive Rules from PaymentConfigRules
     for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
-      Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
+      Rules rules = ruleFactory.createRules(paymentConfigRules);
       rulesList.add(rules);
     }
+
+    testRules = ruleFactory.createRules(paymentConfigRulesList);
+    log.info(testRules.toString());
   }
 
   @Test
@@ -90,7 +94,7 @@ public class RuleGenerationTest {
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
-      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0), 3);
+      Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(0));
       for (Rule rule : rules) {
         boolean ruleEvaluationResult = rule.evaluate(facts);
         log.info("Rule [{}] matched?, {}", rule, ruleEvaluationResult);
@@ -103,26 +107,12 @@ public class RuleGenerationTest {
   @Test
   public void paymentConfigUnitRuleGroup1stMatchedTest() {
     Facts facts = getDefaultFacts();
-    final Map<String, Set<Rule>> failConfigRules = new HashMap<>();
-    final Map<String, Set<Rule>> successConfigRules = new HashMap<>();
-    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_RULE_RESULT_KEY, failConfigRules);
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
-    try {
-      for (Rules rules : rulesList) {
-        Assert.assertFalse(rules.isEmpty());
-        final Set<Rule> failRules = new HashSet<>();
-        final Set<Rule> successRules = new HashSet<>();
-        facts.put(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY, failRules);
-        facts.put(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY, successRules);
-        rulesEngine.fire(rules, facts);
-        if (failRules.isEmpty()) {
-          break;
-        }
-      }
-    } catch (Exception e) {
-      log.error("Exception : ", e);
-    }
+    rulesEngine.fire(testRules, facts);
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
     Assert.assertTrue(failConfigRules.isEmpty());
@@ -150,21 +140,7 @@ public class RuleGenerationTest {
     facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
-    try {
-      for (Rules rules : rulesList) {
-        Assert.assertFalse(rules.isEmpty());
-        final Set<Rule> failRules = new HashSet<>();
-        final Set<Rule> successRules = new HashSet<>();
-        facts.put(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY, failRules);
-        facts.put(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY, successRules);
-        rulesEngine.fire(rules, facts);
-        if (failRules.isEmpty()) {
-          break;
-        }
-      }
-    } catch (Exception e) {
-      log.error("Exception : ", e);
-    }
+    rulesEngine.fire(testRules, facts);
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
     Assert.assertFalse(failConfigRules.isEmpty());
