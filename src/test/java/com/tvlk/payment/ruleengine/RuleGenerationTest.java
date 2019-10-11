@@ -19,7 +19,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.util.ResourceUtils;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -35,17 +34,14 @@ public class RuleGenerationTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private List<PaymentConfigRules> paymentConfigRulesList = new ArrayList<>();
-  private DefaultRulesEngine rulesEngine;
-
+  private DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
+  private List<Rules> rulesList = new ArrayList<>();
 
 
   @Before
   @Test
-  public void ruleGenerationTest() throws IOException {
-    // Initialize rule engine
-    rulesEngine = new DefaultRulesEngine();
-    rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
-    
+  public void ruleGenerationTest() throws Exception {
+
     // Loading base rule
     PaymentConfigRules base = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:rules/zaky-dennis-base-rule.json"),
@@ -76,14 +72,21 @@ public class RuleGenerationTest {
     finalRuleList.add(paymentRules);
 
     paymentConfigRulesList = finalRuleList;
-
     log.info(finalRuleList.toString());
-
     log.info(objectMapper.writeValueAsString(finalRuleList));
+
+    // Initialize rule engine
+    rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
+
+    // Derive Rules from PaymentConfigRules
+    for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
+      Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
+      rulesList.add(rules);
+    }
   }
 
   @Test
-  public void ruleEngineTest() throws IOException {
+  public void ruleEngineTest() {
     Facts facts = getDefaultFacts();
     log.info("facts {} ", facts.asMap());
     try {
@@ -106,12 +109,6 @@ public class RuleGenerationTest {
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
     try {
-      List<Rules> rulesList = new ArrayList<>();
-      for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
-        Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
-        rulesList.add(rules);
-      }
-
       for (Rules rules : rulesList) {
         Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
@@ -154,12 +151,6 @@ public class RuleGenerationTest {
     facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
 
     try {
-      List<Rules> rulesList = new ArrayList<>();
-      for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
-        Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
-        rulesList.add(rules);
-      }
-
       for (Rules rules : rulesList) {
         Assert.assertFalse(rules.isEmpty());
         final Set<Rule> failRules = new HashSet<>();
