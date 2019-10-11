@@ -100,10 +100,11 @@ public class RuleGenerationTest {
 
     try {
       List<Rules> rulesList = new ArrayList<>();
-      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
-        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+      for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
+        Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
         rulesList.add(rules);
       }
+      
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
@@ -122,6 +123,9 @@ public class RuleGenerationTest {
     }
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
+    Assert.assertTrue(failConfigRules.isEmpty());
+    Assert.assertEquals(1, successConfigRules.size());
+    Assert.assertNotNull(successConfigRules.get("FLIGHT_SUB"));
   }
 
   @Test
@@ -136,10 +140,11 @@ public class RuleGenerationTest {
 
     try {
       List<Rules> rulesList = new ArrayList<>();
-      for (int i = 0; i < paymentConfigRulesList.size(); i++) {
-        Rules rules = ruleFactory.createRules(paymentConfigRulesList.get(i), paymentConfigRulesList.size() - i);
+      for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
+        Rules rules = ruleFactory.createRules(paymentConfigRules, paymentConfigRules.getPriority());
         rulesList.add(rules);
       }
+
       DefaultRulesEngine rulesEngine = new DefaultRulesEngine();
       rulesEngine.registerRuleListener(new TvlkDefaultRuleListener());
       for (Rules rules : rulesList) {
@@ -158,6 +163,9 @@ public class RuleGenerationTest {
     }
     log.info("failConfigRules {}", failConfigRules);
     log.info("successConfigRules {}", successConfigRules);
+    Assert.assertFalse(failConfigRules.isEmpty());
+    Assert.assertEquals(1, successConfigRules.size());
+    Assert.assertNotNull(successConfigRules.get("FLIGHT"));
   }
 
 

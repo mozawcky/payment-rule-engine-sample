@@ -1,5 +1,6 @@
 package com.tvlk.payment.ruleengine.groovy;
 
+import com.tvlk.payment.ruleengine.Constants;
 import lombok.Data;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Condition;
@@ -85,12 +86,12 @@ public class GroovyRule extends BasicRule {
   public boolean evaluate(Facts facts) {
     boolean result = condition.evaluate(facts);
     if (result) {
-      Set<Rule> successRules = facts.get("successRules");
+      Set<Rule> successRules = facts.get(Constants.FACTS_SUCCESS_CONDITION_RULE_SET_KEY);
       if (Objects.nonNull(successRules)) {
         successRules.add(this);
       }
     } else {
-      Set<Rule> failRules = facts.get("failRules");
+      Set<Rule> failRules = facts.get(Constants.FACTS_FAIL_CONDITION_RULE_SET_KEY);
       if (Objects.nonNull(failRules)) {
         failRules.add(this);
       }
