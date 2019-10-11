@@ -1,6 +1,5 @@
 {
   "id": "BANK_TRANSFER",
-  "description": "BANK_TRANSFER",
   "priority": 0,
   "ruleDetails": [
     {

@@ -227,7 +227,6 @@ public class RuleGenerationTest {
     PaymentConfigRules subProductRule = objectMapper.readValue(FileUtils.readFileToString(
         ResourceUtils.getFile("classpath:rules/bank-transfer-availability-flight-sub-rule.json"),
         StandardCharsets.UTF_8), PaymentConfigRules.class);
-
     combineRules(productRule, subProductRule);
 
     List<PaymentConfigRules> finalRuleList = new ArrayList<>();

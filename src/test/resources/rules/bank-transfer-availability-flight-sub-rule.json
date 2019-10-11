@@ -1,6 +1,5 @@
 {
-  "id": "FLIGHT_SUB_BANK_TRANSFER",
-  "description": "BANK_TRANSFER",
+  "id": "FLIGHT_SUB",
   "priority": 2,
   "ruleDetails": [
     {
