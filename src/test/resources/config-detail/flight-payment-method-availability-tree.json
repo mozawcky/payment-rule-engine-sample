@@ -1,0 +1,22 @@
+[
+  {
+    "id": "FLIGHT",
+    "paymentMethodList": [
+      "BANK_TRANSFER",
+      "CREDIT_CARD",
+      "ALFAMART"
+    ]
+  },
+  {
+    "id": "FL01",
+    "paymentMethodList": [
+      "CREDIT_CARD"
+    ]
+  },
+  {
+    "id": "FL02",
+    "paymentMethodList": [
+      "BANK_TRANSFER"
+    ]
+  }
+]

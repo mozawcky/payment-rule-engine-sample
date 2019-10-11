@@ -1,0 +1,13 @@
+{
+  "id": "FLIGHT",
+  "paymentMethodList": [
+    "BANK_TRANSFER",
+    "CREDIT_CARD"
+  ],
+  "productPaymentMethodAttributes": {
+    "id": "FLIGHT_SUB",
+    "paymentMethodList": [
+      "BANK_TRANSFER"
+    ]
+  }
+}

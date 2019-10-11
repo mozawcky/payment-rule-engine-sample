@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class PaymentConfigRules {
   String id;
+  String description;
   int priority;
   List<RuleDetail> ruleDetails;
 }

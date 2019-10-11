@@ -123,6 +123,7 @@ public class GroovyRuleFactory {
    */
   private static Rule createCompositeRule(PaymentConfigRules paymentConfigRules) {
     CompositeRule compositeRule = new UnitRuleGroupWithResult(paymentConfigRules.getId());
+    compositeRule.setDescription(paymentConfigRules.getDescription());
     compositeRule.setPriority(Integer.MAX_VALUE - paymentConfigRules.getPriority());
     for (int i = 0; i < paymentConfigRules.getRuleDetails().size(); i++) {
       RuleDetail ruleDetail = paymentConfigRules.getRuleDetails().get(i);
