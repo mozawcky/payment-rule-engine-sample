@@ -34,3 +34,6 @@ out/
 
 ### lombok config ###
 lombok.config
+
+# General
+.DS_Store
