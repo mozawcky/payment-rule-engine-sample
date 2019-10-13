@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Slf4j
-public class MethodAvailabilityPOCTest {
+public class MethodComponentPOCTest {
   private ObjectMapper objectMapper = new ObjectMapper();
   private GroovyRuleFactory ruleFactory = new GroovyRuleFactory(new JsonRuleDefinitionReader());
   private TvlkDefaultRulesEngine rulesEngine = new TvlkDefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
@@ -58,7 +58,7 @@ public class MethodAvailabilityPOCTest {
     Rules rules = ruleFactory.createRules(finalRules);
 
     Facts facts = getDefaultFacts();
-    //facts.put("productType", "HOTEL");
+    facts.put("productType", "HOTEL");
     final Set<RuleResult> ruleResultSet = new HashSet<>();
     final Map<String, RuleResult> failConfigRules = new HashMap<>();
     final Map<String, RuleResult> successConfigRules = new HashMap<>();
@@ -72,47 +72,6 @@ public class MethodAvailabilityPOCTest {
     log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
     log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
   }
-
-  @Test
-  public void poc_test_case_2() throws Exception {
-    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:poc/method-availability/2/method-availability-base-rule.json"),
-        StandardCharsets.UTF_8), PaymentConfigRules.class);
-
-    PaymentConfigRules flightRule = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:poc/method-availability/2/method-availability-flight-rule.json"),
-        StandardCharsets.UTF_8), PaymentConfigRules.class);
-    combineRules(baseRule, flightRule);
-
-    PaymentConfigRules hotelRule = objectMapper.readValue(FileUtils.readFileToString(
-        ResourceUtils.getFile("classpath:poc/method-availability/2/method-availability-hotel-rule.json"),
-        StandardCharsets.UTF_8), PaymentConfigRules.class);
-    combineRules(baseRule, hotelRule);
-
-
-    List<PaymentConfigRules> finalRules = new ArrayList<>();
-    finalRules.add(flightRule);
-    finalRules.add(hotelRule);
-    finalRules.add(baseRule);
-
-    Rules rules = ruleFactory.createRules(finalRules);
-
-    Facts facts = getDefaultFacts();
-    //facts.put("productType", "HOTEL");
-    final Set<RuleResult> ruleResultSet = new HashSet<>();
-    final Map<String, RuleResult> failConfigRules = new HashMap<>();
-    final Map<String, RuleResult> successConfigRules = new HashMap<>();
-    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
-    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
-    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
-
-    rulesEngine.fire(rules, facts);
-
-    log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
-    log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
-    log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
-  }
-
 
   @Test
   public void poc_test_case_3() throws Exception {
