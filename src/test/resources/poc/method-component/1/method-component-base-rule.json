@@ -1,5 +1,5 @@
 {
-  "id": "PAYMENT_BASE_RULE",
+  "id": "BASE_RULE",
   "priority": 0,
   "paymentConfigDetail": {
     "paymentMethodConfigMap": {
@@ -21,7 +21,7 @@
     {
       "name": "PAYMENT_METHOD",
       "description": "Check if payment method is allowed",
-      "field": "deviceInterface",
+      "field": "paymentMethod",
       "operator": "IN",
       "value": ["\"BANK_TRANSFER\""]
     }

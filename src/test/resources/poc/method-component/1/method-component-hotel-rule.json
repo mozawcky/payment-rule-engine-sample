@@ -1,5 +1,5 @@
 {
-  "id": "FLIGHT_RULE",
+  "id": "HOTEL_RULE",
   "priority": 1,
   "paymentConfigDetail": {
     "CREDIT_CARD": {
@@ -25,7 +25,7 @@
       "field": "productType",
       "operator": "IN",
       "value": [
-        "\"FLIGHT\""
+        "\"HOTEL\""
       ]
     }
   ]
