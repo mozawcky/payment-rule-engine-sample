@@ -1,0 +1,29 @@
+{
+  "id": "HOTEL_SUB_RULE",
+  "priority": 2,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "enabled": true
+      },
+      "BANK_TRANSFER": {
+        "enabled": true,
+        "scopes": ["bca"]
+      },
+      "ALFAMART" : {
+        "enabled": false
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "SUB_PRODUCT_TYPE",
+      "description": "Check if sub product type is allowed",
+      "field": "productKey",
+      "operator": "IN",
+      "value": [
+        "\"HT01\""
+      ]
+    }
+  ]
+}

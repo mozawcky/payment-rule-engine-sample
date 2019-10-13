@@ -1,0 +1,29 @@
+{
+  "id": "FLIGHT_SUB_2_RULE",
+  "priority": 2,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "enabled": false
+      },
+      "BANK_TRANSFER": {
+        "enabled": true,
+        "scopes": ["bni"]
+      },
+      "ALFAMART" : {
+        "enabled": false
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "SUB_PRODUCT_TYPE",
+      "description": "Check if sub product type is allowed",
+      "field": "productKey",
+      "operator": "IN",
+      "value": [
+        "\"FL02\""
+      ]
+    }
+  ]
+}

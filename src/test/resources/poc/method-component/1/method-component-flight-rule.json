@@ -1,0 +1,39 @@
+{
+  "id": "FLIGHT",
+  "priority": 1,
+  "paymentConfigDetail": {
+    "CREDIT_CARD": {
+      "methodComponent": [
+        "UNIQUE_CODE_NEGATIVE"
+      ]
+    },
+    "BANK_TRANSFER": {
+      "methodComponent": [
+        "UNIQUE_CODE_NEGATIVE"
+      ]
+    },
+    "ALFAMART": {
+      "methodComponent": [
+        "UNIQUE_CODE_NEGATIVE"
+      ]
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": [
+        "\"FLIGHT\""
+      ]
+    },
+    {
+      "name": "PAYMENT_METHOD",
+      "description": "Check if payment method is allowed",
+      "field": "deviceInterface",
+      "operator": "IN",
+      "value": ["\"BANK_TRANSFER\"", "\"CREDIT_CARD\"", "\"ALFAMART\""]
+    }
+  ]
+}

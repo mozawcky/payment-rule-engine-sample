@@ -1,0 +1,29 @@
+{
+  "id": "FLIGHT_RULE",
+  "priority": 1,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "enabled": true
+      },
+      "BANK_TRANSFER": {
+        "enabled": true,
+        "scopes": ["bca"]
+      },
+      "ALFAMART" : {
+        "enabled": false
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": [
+        "\"FLIGHT\""
+      ]
+    }
+  ]
+}

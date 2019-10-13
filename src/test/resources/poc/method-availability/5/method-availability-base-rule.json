@@ -1,0 +1,55 @@
+{
+  "id": "BASE_RULE",
+  "priority": 0,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "enabled": false
+      },
+      "BANK_TRANSFER": {
+        "enabled": true,
+        "scopes": ["bca", "bni"]
+      },
+      "ALFAMART": {
+        "enabled": true
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "CURRENCY",
+      "description": "Check if currency is allowed",
+      "field": "currency",
+      "operator": "EQUAL",
+      "value": "IDR"
+    },
+    {
+      "name": "DEVICE_INTERFACE",
+      "description": "Check if device is allowed",
+      "field": "deviceInterface",
+      "operator": "IN",
+      "value": ["\"DESKTOP\"", "\"ANDROID\"", "\"IOS\""]
+    },
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": ["\"FLIGHT\"", "\"HOTEL\""]
+    },
+    {
+      "name": "MAX_INVOICE_AMOUNT",
+      "description": "Check if amount is less than max amount",
+      "field": "amount",
+      "operator": "LTE",
+      "value": "10000000"
+    },
+    {
+      "name": "MIN_INVOICE_AMOUNT",
+      "description": "Check if amount is greater than min amount",
+      "field": "amount",
+      "operator": "GTE",
+      "value": "100000"
+    }
+  ]
+}

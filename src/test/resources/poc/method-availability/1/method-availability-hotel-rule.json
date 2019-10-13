@@ -1,0 +1,36 @@
+{
+  "id": "HOTEL_RULE",
+  "priority": 1,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "enabled": false
+      },
+      "BANK_TRANSFER": {
+        "enabled": true,
+        "scopes": ["bca", "bni"]
+      },
+      "ALFAMART" : {
+        "enabled": true
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": [
+        "\"HOTEL\""
+      ]
+    },
+    {
+      "name": "MIN_INVOICE_AMOUNT",
+      "description": "Check if amount is greater than min amount",
+      "field": "amount",
+      "operator": "GTE",
+      "value": "300000"
+    }
+  ]
+}
