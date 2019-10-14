@@ -363,19 +363,6 @@ public class MethodAvailabilityPOCTest {
     log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
   }
 
-
-  private List<PaymentConfigRules> generateRules(PaymentConfigRules... rules) {
-    List<PaymentConfigRules> rulesList = new ArrayList<>();
-
-    for (int i = 0; i < rules.length - 1; i++) {
-      combineRules(rules[i], rules[i+1]);
-
-      rulesList.add(rules[i]);
-    }
-
-    return rulesList;
-  }
-
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
     Set<String> toRuleNames = new HashSet<>();
     for (RuleDetail ruleDetail : to.getRuleDetails()) {

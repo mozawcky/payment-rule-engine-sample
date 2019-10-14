@@ -1,0 +1,39 @@
+{
+  "id": "BASE_RULE",
+  "priority": 0,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "BANK_TRANSFER": {
+        "methodComponent": [
+          "NEGATIVE_UNIQUE_CODE"
+        ]
+      },
+      "CREDIT_CARD": {
+        "methodComponent": [
+          "FIXED_TRX_FEE_10K"
+        ]
+      },
+      "ALFAMART": {
+        "methodComponent": [
+          "PERCENTAGE_TRX_FEE_2%"
+        ]
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "CURRENCY",
+      "description": "Check if currency is allowed",
+      "field": "currency",
+      "operator": "EQUAL",
+      "value": "IDR"
+    },
+    {
+      "name": "PAYMENT_METHOD",
+      "description": "Check if payment method is allowed",
+      "field": "paymentMethod",
+      "operator": "IN",
+      "value": ["\"BANK_TRANSFER\""]
+    }
+  ]
+}

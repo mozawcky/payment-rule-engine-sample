@@ -73,18 +73,178 @@ public class MethodComponentPOCTest {
     log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
   }
 
+  @Test
+  public void poc_test_case_2() throws Exception {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/2/method-component-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
 
-  private List<PaymentConfigRules> generateRules(PaymentConfigRules... rules) {
-    List<PaymentConfigRules> rulesList = new ArrayList<>();
+    PaymentConfigRules flightRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/2/method-component-flight-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, flightRule);
 
-    for (int i = 0; i < rules.length - 1; i++) {
-      combineRules(rules[i], rules[i+1]);
+    PaymentConfigRules hotelRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/2/method-component-hotel-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, hotelRule);
 
-      rulesList.add(rules[i]);
-    }
 
-    return rulesList;
+    List<PaymentConfigRules> finalRules = new ArrayList<>();
+    finalRules.add(flightRule);
+    finalRules.add(hotelRule);
+    finalRules.add(baseRule);
+
+    Rules rules = ruleFactory.createRules(finalRules);
+
+    Facts facts = getDefaultFacts();
+    facts.put("productType", "HOTEL");
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
+
+    rulesEngine.fire(rules, facts);
+
+    log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
+    log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
+    log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
   }
+
+  @Test
+  public void poc_test_case_3() throws Exception {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/3/method-component-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    PaymentConfigRules flightRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/3/method-component-flight-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, flightRule);
+
+    PaymentConfigRules hotelRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/3/method-component-hotel-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, hotelRule);
+
+
+    List<PaymentConfigRules> finalRules = new ArrayList<>();
+    finalRules.add(flightRule);
+    finalRules.add(hotelRule);
+    finalRules.add(baseRule);
+
+    Rules rules = ruleFactory.createRules(finalRules);
+
+    Facts facts = getDefaultFacts();
+    facts.put("productType", "HOTEL");
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
+
+    rulesEngine.fire(rules, facts);
+
+    log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
+    log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
+    log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
+  }
+
+  @Test
+  public void poc_test_case_4() throws Exception {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/4/method-component-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    PaymentConfigRules flightRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/4/method-component-flight-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, flightRule);
+
+    PaymentConfigRules flightSubRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/4/method-component-flight-sub-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(flightRule, flightSubRule);
+
+    PaymentConfigRules hotelRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/4/method-component-hotel-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, hotelRule);
+
+
+    List<PaymentConfigRules> finalRules = new ArrayList<>();
+    finalRules.add(flightRule);
+    finalRules.add(flightSubRule);
+    finalRules.add(hotelRule);
+    finalRules.add(baseRule);
+
+    Rules rules = ruleFactory.createRules(finalRules);
+
+    Facts facts = getDefaultFacts();
+    facts.put("productType", "HOTEL");
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
+
+    rulesEngine.fire(rules, facts);
+
+    log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
+    log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
+    log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
+  }
+
+  @Test
+  public void poc_test_case_5() throws Exception {
+    PaymentConfigRules baseRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/5/method-component-base-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+
+    PaymentConfigRules flightRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/5/method-component-flight-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, flightRule);
+
+    PaymentConfigRules flightSubRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/5/method-component-flight-sub-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(flightRule, flightSubRule);
+
+    PaymentConfigRules hotelRule = objectMapper.readValue(FileUtils.readFileToString(
+        ResourceUtils.getFile("classpath:poc/method-component/5/method-component-hotel-rule.json"),
+        StandardCharsets.UTF_8), PaymentConfigRules.class);
+    combineRules(baseRule, hotelRule);
+
+
+    List<PaymentConfigRules> finalRules = new ArrayList<>();
+    finalRules.add(flightRule);
+    finalRules.add(flightSubRule);
+    finalRules.add(hotelRule);
+    finalRules.add(baseRule);
+
+    Rules rules = ruleFactory.createRules(finalRules);
+
+    Facts facts = getDefaultFacts();
+    facts.put("productType", "HOTEL");
+    final Set<RuleResult> ruleResultSet = new HashSet<>();
+    final Map<String, RuleResult> failConfigRules = new HashMap<>();
+    final Map<String, RuleResult> successConfigRules = new HashMap<>();
+    facts.put(Constants.FACTS_FAIL_RULE_MAP_KEY, failConfigRules);
+    facts.put(Constants.FACTS_SUCCESS_RULE_MAP_KEY, successConfigRules);
+    facts.put(Constants.FACTS_RULE_RESULT_SET_KEY, ruleResultSet);
+
+    rulesEngine.fire(rules, facts);
+
+    log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
+    log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
+    log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
+  }
+
 
   private void combineRules(PaymentConfigRules from, PaymentConfigRules to) {
     Set<String> toRuleNames = new HashSet<>();

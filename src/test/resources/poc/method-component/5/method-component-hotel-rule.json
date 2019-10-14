@@ -1,0 +1,35 @@
+{
+  "id": "HOTEL_RULE",
+  "priority": 1,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "methodComponent": [
+          "UNIQUE_CODE_NEGATIVE",
+          "PERCENTAGE_TRX_FEE_2%"
+        ]
+      },
+      "BANK_TRANSFER": {
+        "methodComponent": [
+          "UNIQUE_CODE_POSITIVE"
+        ]
+      },
+      "ALFAMART": {
+        "methodComponent": [
+          "PERCENTAGE_TRX_FEE_3%"
+        ]
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": [
+        "\"HOTEL\""
+      ]
+    }
+  ]
+}

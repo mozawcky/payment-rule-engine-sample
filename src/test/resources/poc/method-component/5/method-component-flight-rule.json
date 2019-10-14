@@ -1,0 +1,34 @@
+{
+  "id": "FLIGHT_RULE",
+  "priority": 1,
+  "paymentConfigDetail": {
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "methodComponent": [
+        ]
+      },
+      "BANK_TRANSFER": {
+        "methodComponent": [
+          "UNIQUE_CODE_POSITIVE"
+        ]
+      },
+      "ALFAMART": {
+        "methodComponent": [
+          "UNIQUE_CODE_NEGATIVE",
+          "FIXED_TRX_FEE_5K"
+        ]
+      }
+    }
+  },
+  "ruleDetails": [
+    {
+      "name": "PRODUCT_TYPE",
+      "description": "Check if product type is allowed",
+      "field": "productType",
+      "operator": "IN",
+      "value": [
+        "\"FLIGHT\""
+      ]
+    }
+  ]
+}
