@@ -3,6 +3,7 @@ package com.tvlk.payment.ruleengine.groovy;
 import com.tvlk.payment.ruleengine.Constants;
 import com.tvlk.payment.ruleengine.model.rules.RuleResult;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Action;
 import org.jeasy.rules.api.Condition;
 import org.jeasy.rules.api.Facts;
@@ -15,6 +16,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
+@Slf4j
 @Data
 public class GroovyRule extends BasicRule {
 
