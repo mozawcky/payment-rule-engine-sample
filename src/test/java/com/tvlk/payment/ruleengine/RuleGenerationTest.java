@@ -86,13 +86,16 @@ public class RuleGenerationTest {
     rulesEngine = new TvlkDefaultRulesEngine(new RulesEngineParameters(true, false, false, RulesEngineParameters.DEFAULT_RULE_PRIORITY_THRESHOLD));
 
     // Derive Rules from PaymentConfigRules
+    // List<Rules> to be initialized
     for (PaymentConfigRules paymentConfigRules : paymentConfigRulesList) {
       Rules rules = ruleFactory.createRules(paymentConfigRules);
       rulesList.add(rules);
     }
+    log.info("ruleList {}", rulesList.toString());
 
+    // Utilize TreeSet in Rules
     testRules = ruleFactory.createRules(paymentConfigRulesList);
-    log.info(testRules.toString());
+    log.info("testRules {}", testRules.toString());
   }
 
   @Before
@@ -135,10 +138,10 @@ public class RuleGenerationTest {
     log.info("ruleResultSet {}", ruleResultSet);
 
     Assert.assertEquals(1, ruleResultSet.size());
-    Assert
-        .assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());  // Only 1 rule matched
-    Assert.assertEquals(0, ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet())
-                                        .size()); // Only 0 rule failed and skipped the rest
+    // Only 1 rule matched
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());
+    // Only 0 rule failed and skipped the rest
+    Assert.assertEquals(0, ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet()).size());
     Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT_SUB".equals(r.getRuleName()) && r.getFailRuleSet().isEmpty())
                                         .collect(Collectors.toSet()).size());
   }
@@ -172,10 +175,10 @@ public class RuleGenerationTest {
     log.info("ruleResultSet {}", ruleResultSet);
 
     Assert.assertEquals(2, ruleResultSet.size());
-    Assert
-        .assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());  // Only 1 rule matched
-    Assert.assertEquals(1,
-                        ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet()).size()); // Only 1 rule failed
+    // Only 1 rule matched
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> r.getFailRuleSet().isEmpty()).collect(Collectors.toSet()).size());
+    // Only 1 rule failed
+    Assert.assertEquals(1, ruleResultSet.stream().filter(r -> r.getSuccessRuleSet().isEmpty()).collect(Collectors.toSet()).size());
     Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT_SUB".equals(r.getRuleName()) && r.getSuccessRuleSet().isEmpty())
                                         .collect(Collectors.toSet()).size());
     Assert.assertEquals(1, ruleResultSet.stream().filter(r -> "FLIGHT".equals(r.getRuleName()) && r.getFailRuleSet().isEmpty())
