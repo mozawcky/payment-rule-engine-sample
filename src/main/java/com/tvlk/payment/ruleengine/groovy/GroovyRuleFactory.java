@@ -3,6 +3,10 @@ package com.tvlk.payment.ruleengine.groovy;
 import com.tvlk.payment.ruleengine.model.rules.PaymentConfigRules;
 import com.tvlk.payment.ruleengine.model.rules.RuleDetail;
 import com.tvlk.payment.ruleengine.model.rules.UnitRuleGroupWithResult;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.jeasy.rules.api.Rule;
 import org.jeasy.rules.api.Rules;
 import org.jeasy.rules.support.ActivationRuleGroup;
@@ -16,6 +20,9 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GroovyRuleFactory {
 
   private RuleDefinitionReader reader;
@@ -129,6 +136,7 @@ public class GroovyRuleFactory {
                                                                         Integer.MAX_VALUE - paymentConfigRules.getPriority(),
                                                                         paymentConfigRules.getPaymentConfigDetail());
     for (int i = 0; i < paymentConfigRules.getRuleDetails().size(); i++) {
+      // Rule priority: the lower value, the higher priority. Added priority to preserve the order items in rule detail list.
       RuleDetail ruleDetail = paymentConfigRules.getRuleDetails().get(i);
       compositeRule.addRule(ruleDetail.toGroovy(++i));
     }
