@@ -2,18 +2,20 @@
   "id": "FLIGHT_SUB_RULE",
   "priority": 2,
   "paymentConfigDetail": {
-    "CREDIT_CARD": {
-      "methodComponent": [
-      ]
-    },
-    "BANK_TRANSFER": {
-      "methodComponent": [
-        "UNIQUE_CODE_POSITIVE"
-      ]
-    },
-    "ALFAMART": {
-      "methodComponent": [
-      ]
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "methodComponent": [
+        ]
+      },
+      "BANK_TRANSFER": {
+        "methodComponent": [
+          "UNIQUE_CODE_POSITIVE"
+        ]
+      },
+      "ALFAMART": {
+        "methodComponent": [
+        ]
+      }
     }
   },
   "ruleDetails": [

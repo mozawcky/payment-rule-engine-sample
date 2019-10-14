@@ -2,19 +2,21 @@
   "id": "HOTEL_RULE",
   "priority": 1,
   "paymentConfigDetail": {
-    "CREDIT_CARD": {
-      "methodComponent": [
-        "UNIQUE_CODE_NEGATIVE"
-      ]
-    },
-    "BANK_TRANSFER": {
-      "methodComponent": [
-        "UNIQUE_CODE_POSITIVE"
-      ]
-    },
-    "ALFAMART": {
-      "methodComponent": [
-      ]
+    "paymentMethodConfigMap": {
+      "CREDIT_CARD": {
+        "methodComponent": [
+          "UNIQUE_CODE_NEGATIVE"
+        ]
+      },
+      "BANK_TRANSFER": {
+        "methodComponent": [
+          "UNIQUE_CODE_POSITIVE"
+        ]
+      },
+      "ALFAMART": {
+        "methodComponent": [
+        ]
+      }
     }
   },
   "ruleDetails": [

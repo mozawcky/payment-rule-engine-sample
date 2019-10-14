@@ -17,13 +17,6 @@
       "field": "currency",
       "operator": "EQUAL",
       "value": "IDR"
-    },
-    {
-      "name": "PAYMENT_METHOD",
-      "description": "Check if payment method is allowed",
-      "field": "paymentMethod",
-      "operator": "IN",
-      "value": ["\"BANK_TRANSFER\""]
     }
   ]
 }
