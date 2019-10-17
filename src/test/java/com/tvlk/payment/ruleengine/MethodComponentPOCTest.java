@@ -68,6 +68,7 @@ public class MethodComponentPOCTest {
 
     rulesEngine.fire(rules, facts);
 
+    log.info("completeRule {}", objectMapper.writeValueAsString(finalRules));
     log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
     log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
     log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
@@ -222,8 +223,8 @@ public class MethodComponentPOCTest {
 
 
     List<PaymentConfigRules> finalRules = new ArrayList<>();
-    finalRules.add(flightRule);
     finalRules.add(flightSubRule);
+    finalRules.add(flightRule);
     finalRules.add(hotelRule);
     finalRules.add(baseRule);
 
@@ -231,6 +232,7 @@ public class MethodComponentPOCTest {
 
     Facts facts = getDefaultFacts();
     facts.put("productType", "HOTEL");
+    facts.put("productKey", "");
     final Set<RuleResult> ruleResultSet = new HashSet<>();
     final Map<String, RuleResult> failConfigRules = new HashMap<>();
     final Map<String, RuleResult> successConfigRules = new HashMap<>();
@@ -240,6 +242,7 @@ public class MethodComponentPOCTest {
 
     rulesEngine.fire(rules, facts);
 
+    log.info("completeRule {}", objectMapper.writeValueAsString(finalRules));
     log.info("failConfigRules {}", objectMapper.writeValueAsString(failConfigRules));
     log.info("successConfigRules {}", objectMapper.writeValueAsString(successConfigRules));
     log.info("ruleResultSet {}", objectMapper.writeValueAsString(ruleResultSet));
@@ -298,7 +301,7 @@ public class MethodComponentPOCTest {
 
   private PaymentMethodFacts getDefaultPaymentMethodFacts() {
     PaymentMethodFacts paymentMethodFacts = new PaymentMethodFacts();
-    paymentMethodFacts.setPaymentMethod("CREDIT_CARD");
+    paymentMethodFacts.setPaymentMethod("BANK_TRANSFER");
     return paymentMethodFacts;
   }
 }

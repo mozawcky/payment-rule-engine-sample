@@ -5,7 +5,7 @@
     "paymentMethodConfigMap": {
       "CREDIT_CARD": {
         "methodComponent": [
-          "UNIQUE_CODE_NEGATIVE"
+          "UNIQUE_CODE_POSITIVE"
         ]
       },
       "BANK_TRANSFER": {

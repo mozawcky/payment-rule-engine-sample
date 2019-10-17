@@ -1,6 +1,6 @@
 {
   "id": "HOTEL_RULE",
-  "priority": 1,
+  "priority": 4,
   "paymentConfigDetail": {
     "paymentMethodConfigMap": {
       "CREDIT_CARD": {

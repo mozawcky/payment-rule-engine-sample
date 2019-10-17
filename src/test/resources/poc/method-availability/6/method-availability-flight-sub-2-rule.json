@@ -4,7 +4,7 @@
   "paymentConfigDetail": {
     "paymentMethodConfigMap": {
       "CREDIT_CARD": {
-        "enabled": true
+        "enabled": false
       },
       "BANK_TRANSFER": {
         "enabled": true,

@@ -35,7 +35,7 @@
       "description": "Check if product type is allowed",
       "field": "productType",
       "operator": "IN",
-      "value": ["\"FLIGHT\"", "\"HOTEL\""]
+      "value": ["\"FLIGHT\"", "\"HOTEL\"", "\"TRAIN\""]
     },
     {
       "name": "MAX_INVOICE_AMOUNT",
